@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Network Audit Analyzer</title>
+   <link rel="stylesheet" type="text/css" href="/static/css/cui-standard.min.css">
+   <link rel="stylesheet" type="text/css" href="/static/css/frame.css">
+   <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+   <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+   <link rel="stylesheet" type="text/css" href="/static/css/Chart.css">
+   <script src="https://d3js.org/d3.v3.min.js" type="text/javascript"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+   <script type="text/javascript" src="/static/js/lodash.min.js"></script>
+   <script type="text/javascript" src="/static/js/clipboard.js"></script>
+   <script type="text/javascript" src="/static/js/styleguide.js"></script>
+   <script type="text/javascript" src="/static/js/highcharts.js"></script>
+   <script type="text/javascript" src="/static/js/exporting.js"></script>
+   <script type="text/javascript" src="/static/js/html2canvas.js"></script>
+   <script type="text/javascript" src="/static/js/Chart.js"></script>
+
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="/static/js/graphs.js"></script>
+    <script type="text/javascript" src="/static/js/auth.js"></script>
+    <script type="text/javascript" src="/static/js/index.js"></script>
+</head>
+<header class="header">
+    <div class="container">
+        <div class="header-panels">
+
+
+            <div class="header-panel header-panel--left">
+                <a class="header__logo" href="http://www.cisco.com" target="_blank">
+                    <span class="icon-cisco"></span>
+                        </a>
+                <div class="header__title">Network Audit Analyzer > <span id="cust_name_header"> </span> >  <span id="audit_id_header"> </span></div>
+            </div>
+
+            <div class="header-panel header-panel--right">
+                <label id="naa_user_name"></label>&nbsp;&nbsp;
+                <div class="header-item dropdown dropdown--left" active>
+                        <a><span class="icon-user icon-size-24"></span></a>
+                        <div class="dropdown__menu">
+                            <a>Logout</a>
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+</br>
+</br>
+<body class="cui">
+<div class="panel panel--loose panel--secondary dbl-padding">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-6">
+            <h4 class="no-margin">Welcome to</h4>
+            <h1 class="display-0">
+                <span>Network <span class="text-primary"> Audit Analyzer</span></span>
+            </h1>
+            <p class="lead">A tool to visualize CNA audit data</p>
+        </div>
+        <div class="col-md-3">
+            <img src="/static/img/iheartcisco.png">
+        </div>
+    </div>
+</div>
+
+</br>
+</br>
+</br>
+
+<div class="row">
+    <div class ="col-md-7"></div>
+    <div class = "col-md-4">
+        <button class="btn btn--large btn--wide" style="background-color:#1e4471; color:white; left:28%;"><a href ="http://10.123.219.166:8500" target="_blank"  style="color:white; text-decoration:none;">Audit Comparator</a></button>
+        <br>
+    </div>
+    <div class ="col-md-1"></div>
+
+</div>
+<div class="row base-margin-bottom">
+<div class="col-1">
+</div>
+
+
+<div class="col-10">
+
+    <div class="form-group">
+    <label class="switch">
+        <input type="checkbox" id="ext_view_button">
+        <span class="switch__label">Enable for external view</span>
+        <span class="switch__input" ></span>
+    </label>
+    <div class="row" id="downloadButtonRow">
+        <div class="col-8"></div>
+    </div>
+	</br>
+
+    <div class="row">
+         <div class="col-4">
+                <div class="panel panel--bordered-left panel--loose" id="device_exceptions_div" onclick="createTable(this.id,'Audit Findings')">
+                    <div class="row" style="height: 150px; background-color: #00bceb" id="tab3_container">
+                        <img src="static/img/Exception.png" style="width:80px;height:80px; margin-left: auto; margin-right: auto; display: block; margin-top: auto; margin-bottom: auto">
+                    </div>
+                    <div>
+                        <p align="center"><font size="4"><span style="cursor:pointer"><u>Audit Findings</u></span></font></p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        <div class="col-4">
+                <div class="panel panel--bordered-left panel--loose"  id="audit_inventory_summary_div" onclick="createTable(this.id,'Inventory Summary')">
+                    <div class="row"  style="height: 150px; background-color: #00bceb" id="tab1_container">
+                        <img src="static/img/Inventory.png" style="width:80px;height:80px; margin-left: auto; margin-right: auto; display: block; margin-top: auto; margin-bottom: auto">
+                    </div>
+                    <div>
+                        <p align="center"><font size="4"><span style="cursor:pointer"><u>Inventory Summary</u></span></font></p>
+
+                                            </div>
+                </div>
+            </div>
+              <!--<div class="col-3">
+                <div class="panel panel--bordered-left panel--loose" id="devices_health_overview_div" onclick="createTable(this.id,'Device Health Overview')">
+                    <div class="row" style="height: 150px; background-color: #00bceb" id="tab2_container">
+                        <img src="static/img/Health.png" style="width:80px;height:80px; margin-left: auto; margin-right: auto; display: block; margin-top: auto; margin-bottom: auto">
+                    </div>
+                    <div>
+                        <p align="center"><font size="4"><span style="cursor:pointer"><u>Device Health Overview</u></span></font></p>
+                    </div>
+                </div>
+            </div>-->
+        <div class="col-4">
+                <div class="panel panel--bordered-left panel--bordered-right panel--loose" id="audit_data_div" onclick="createTable(this.id,'Device Data')">
+                    <div class="row" style="height: 150px; background-color: #00bceb" id="tab4_container">
+                        <img src="static/img/FullData.png" style="width:80px;height:80px; margin-left: auto; margin-right: auto; display: block; margin-top: auto; margin-bottom: auto">
+                    </div>
+                    <div>
+                        <p align="center"><font size="4"><span style="cursor:pointer"><u>Device Data</u></span></font></p>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </br>
+    </br>
+    <div class="row" id='audits_container' style="display : none" >
+      <div class="col-1"></div>
+      <div class="col-5 row" style="height: 300px" id="audits_1_container">
+      </div>
+      <div class="col-5 row" style="height: 300px" id="audits_2_container">
+      </div>
+      <div class="col-1"></div>
+    </div>
+  </br>
+  </br>
+    <div class="row">
+        <div class="col-4">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="graph_row_1_container">
+                    </div>
+                </div>
+            </div>
+        <div class="col-4">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="graph_row_2_container">
+                    </div>
+                </div>
+            </div>
+        <div class="col-4">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="graph_row_3_container">
+                    </div>
+                </div>
+            </div>
+        <!--<div class="col-6">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="graph_row_4_container">
+                    </div>
+                </div>
+            </div>-->
+
+    </div>
+    </br>
+
+    <div class="row" id="top_exceptions_div" style="display:none">
+        <div class="col-6">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="graph_row_4_container">
+                        <p>Top 10 devices with max number of exceptions</p>
+                    </div>
+                </div>
+            </div>
+        <div class="col-6">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="graph_row_5_container">
+                        <p>Top 10 exceptions with max number of devices</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </br>
+    </br>
+
+ <!--   <div class="row" id="cna_graph_div" style="display:none">
+    <div class="col-12">
+        <div class="base-margin-bottom">
+            <ul class="accordion accordion--bordered">
+                <li class>
+                    <a class="accordion__title" onclick="$(this).parent().toggleClass('active');">
+                        <span> [[Coming soon]] Click to see more Graphs generated by CNA</span>
+                        <span class="accordion__toggle icon-chevron-down"></span>
+                    </a>
+                    <div class="accordion__content" id="cna_graph_container">
+                        <p> CNA generated graphs will be displayed here </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </div>-->
+
+    </br>
+    </br>
+    <div class="row" id="fccaps_severity_breakdown_row" style="display : none">
+        <div class="col-1"></div>
+        <div class="col-2">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="fault_container">
+                        <div class="row" style="width:100%; display:inline-block">
+                        <p style="text-align:center"><font size="4"><span style="cursor:pointer" id="Fault" onclick="filterTableFromNMSArea(this.id)"><u>Fault</u></span></font></p>
+                        </div>
+                            <div class="col-12 text-center base-margin-bottom">
+                                <div class="gauge gauge--light" data-percentage="100">
+                                    <div class="gauge__circle">
+                                        <div class="mask full">
+                                            <div class="fill"></div>
+                                        </div>
+                                        <div class="mask half">
+                                            <div class="fill"></div>
+                                            <div class="fill fix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="gauge__inset">
+                                        <div class="gauge__percentage" id="total_fault_exceptions">25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--primary" style="cursor:pointer" id = "Fault_Critical" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--danger" style="cursor:pointer" id = "Fault_High" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning" style="cursor:pointer" id = "Fault_Medium" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning-alt" style="cursor:pointer" id = "Fault_Low" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--success" style="cursor:pointer" id = "Fault_Info" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        <div class="col-2">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="configuration_container">
+                        <div class="row" style="width:100%; display:inline-block">
+                        <p style="text-align:center"><font size="4"><span style="cursor:pointer" id="Configuration" onclick="filterTableFromNMSArea(this.id)"><u>Configuration</u></span></font></p>
+                        </div>
+                            <div class="col-12 text-center base-margin-bottom">
+                                <div class="gauge gauge--light" data-percentage="100">
+                                    <div class="gauge__circle">
+                                        <div class="mask full">
+                                            <div class="fill"></div>
+                                        </div>
+                                        <div class="mask half">
+                                            <div class="fill"></div>
+                                            <div class="fill fix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="gauge__inset">
+                                        <div class="gauge__percentage" id="total_configuration_exceptions" >25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--primary" style="cursor:pointer" id = "Configuration_Critical" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--danger" style="cursor:pointer" id = "Configuration_High" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning" style="cursor:pointer" id = "Configuration_Medium" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning-alt" style="cursor:pointer" id = "Configuration_Low" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--success" style="cursor:pointer" id = "Configuration_Info" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        <div class="col-2">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="capacity_container">
+                        <div class="row" style="width:100%; display:inline-block">
+                        <p style="text-align:center"><font size="4"><span style="cursor:pointer" id="Capacity" onclick="filterTableFromNMSArea(this.id)"><u>Capacity</u></span></font></p>
+                        </div>
+                            <div class="col-12 text-center base-margin-bottom">
+                                <div class="gauge gauge--light" data-percentage="100">
+                                    <div class="gauge__circle">
+                                        <div class="mask full">
+                                            <div class="fill"></div>
+                                        </div>
+                                        <div class="mask half">
+                                            <div class="fill"></div>
+                                            <div class="fill fix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="gauge__inset">
+                                        <div class="gauge__percentage" id="total_capacity_exceptions">25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--primary" style="cursor:pointer" id = "Capacity_Critical" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--danger" style="cursor:pointer" id = "Capacity_High" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning" style="cursor:pointer" id = "Capacity_Medium" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning-alt" style="cursor:pointer" id = "Capacity_Low" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--success" style="cursor:pointer" id = "Capacity_Info" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        <div class="col-2">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="performace_container">
+                        <div class="row" style="width:100%; display:inline-block">
+                        <p style="text-align:center"><font size="4"><span style="cursor:pointer" id="Performance" onclick="filterTableFromNMSArea(this.id)"><u>Performance</u></span></font></p>
+                        </div>
+                            <div class="col-12 text-center base-margin-bottom">
+                                <div class="gauge gauge--light" data-percentage="100">
+                                    <div class="gauge__circle">
+                                        <div class="mask full">
+                                            <div class="fill"></div>
+                                        </div>
+                                        <div class="mask half">
+                                            <div class="fill"></div>
+                                            <div class="fill fix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="gauge__inset">
+                                        <div class="gauge__percentage" id="total_performance_exceptions">25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--primary" style="cursor:pointer" id = "Performance_Critical" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--danger" style="cursor:pointer" id = "Performance_High" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning" style="cursor:pointer" id = "Performance_Medium" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning-alt" style="cursor:pointer" id = "Performance_Low" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--success" style="cursor:pointer" id = "Performance_Info" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        <div class="col-2">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 300px" id="security_container">
+                        <div class="row" style="width:100%; display:inline-block">
+                        <p style="text-align:center"><font size="4"><span style="cursor:pointer" id="Security" onclick="filterTableFromNMSArea(this.id)"><u>Security</u></span></font></p>
+                        </div>
+                            <div class="col-12 text-center base-margin-bottom">
+                                <div class="gauge gauge--light" data-percentage="100">
+                                    <div class="gauge__circle">
+                                        <div class="mask full">
+                                            <div class="fill"></div>
+                                        </div>
+                                        <div class="mask half">
+                                            <div class="fill"></div>
+                                            <div class="fill fix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="gauge__inset">
+                                        <div class="gauge__percentage" id="total_security_exceptions">25</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"></div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--primary" style="cursor:pointer" id = "Security_Critical" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--danger" style="cursor:pointer" id = "Security_High" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning" style="cursor:pointer" id = "Security_Medium" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--warning-alt" style="cursor:pointer" id = "Security_Low" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                            <div class="col-2 base-margin-bottom">
+                                <span class="badge-wrapper">
+                                    <span class="icon-alert icon-size-32"></span>
+                                    <span class="badge badge--large badge--success" style="cursor:pointer" id = "Security_Info" onclick="filterTableFromNMSArea(this.id)">3</span>
+                                </span>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    </br>
+    </br>
+
+
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <div class="panel" id="separatorDiv">
+                <div class="col-12 base-margin-bottom">
+                    <div class="panel panel--primary" style="text-align : center">
+                    <h1 class="display-4" id="displayPlaceHolder"></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+     <div class="row" id="dropdown_filter_row" style="display : none">
+        <div class="col-1"></div>
+                        <div class="col-3" style="padding-bottom: 30px;">
+                            <div class="subheader" style="text-align : left">Select Table</div>
+                               <div class="dropdown dropdown--center"></div>
+                                    <div class="dropdown_menu">
+                                        <select class="dropdown__menu dropdown-menu-right" id="dropdown_tables"  style="background-color: #ced4da;" onchange="filterTableFromDropdown(this)">
+                                        </select>
+                                    </div>
+                            </div>
+
+                        <div class="col-3" style="padding-bottom: 30px;">
+                            <div class="subheader" style="text-align : left">Select Exception</div>
+                               <div class="dropdown dropdown--center"></div>
+                                    <div class="dropdown_menu">
+                                        <select class="dropdown__menu dropdown-menu-right" id="dropdown_exceptions"  style="background-color: #ced4da;" onchange="filterTableFromDropdown(this)">
+                                        </select>
+                                    </div>
+                            </div>
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <div class="subheader" style="text-align : left">Legend for Severity</div>
+                        <table border="2">
+                            <thead>
+                                <tr>
+                                    <td border="1"><span class="label label--small label--primary">Critical</span></td>
+                                    <td border="1"><span class="label label--small label--danger">high</span></td>
+                                    <td border="1"><span class="label label--small label--warning">Medium</span></td>
+                                    <td border="1"><span class="label label--small label--warning-alt">Low</span></td>
+                                    <td border="1"><span class="label label--small label--success">Informational</span></td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+        </div>
+
+    <div class="row">
+        <div class="col-12">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style="height: 600px; overflow:auto;" id="table_container"display:table>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+<div class="col-1"></div>
+
+<div class="subheader"></div>
+<footer class="footer footer--primary">
+    <div class="footer__links">
+        <ul class="list list--inline">
+            <li><a href="http://www.cisco.com/cisco/web/siteassets/contacts/index.html" target="_blank">Contacts</a></li>
+            <li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ" target="_blank">Feedback</a></li>
+            <li><a href="https://www.cisco.com/c/en/us/about/help.html" target="_blank">Help</a></li>
+
+        </ul>
+    </div>
+</footer>
+</div>
+
+
+<div id="comment_popup_div" class="panel panel--bordered panel--raised panel--loose" style="z-index:100; position: fixed;bottom: 0%;right: 0%; height: 80%; width: 40%; box-shadow: 10px 10px 5px grey; border: 2px solid white; border-radius: 5px; display: none;overflow:auto;">
+
+<div class = "row" style ="border: 1px solid #00bceb;">
+    <div id="table_name_container" class="col-3">
+        <p>Table Name will come here</p>
+    </div>
+    <div id="exception_name_container" class="col-3">
+        <p>Exception Name will come here</p>
+    </div>
+    <div id="curr_sev" class="col-3">
+        <p>Current Severity will come here</p>
+    </div>
+    <div id="clicked_nms_area" class="col-3">
+        <p>NMS Area will come here</p>
+    </div>
+</div>
+
+<hr width="100%" align="center" style="background-color: #00bceb;">
+
+<p align="right">
+    <label class="switch">
+        <input type="checkbox" id="dnr_button" onclick="changeDNRFlag()">
+        <span class="switch__label">Do Not Report</span>
+        <span class="switch__input" ></span>
+    </label>
+</p>
+
+<p>Change Severity to:</p>
+
+<div class = "row" id="change_sev_container">
+
+    <div class="form-group form-group--inline">
+            <label class="radio">
+                <input type="radio" id="Critical_checkbox_change_sev" name = "sev_radio">
+                <span class="radio__input"></span>
+                <span class="radio__label">Critical</span>
+            </label>
+        </div>
+        <div class="form-group form-group--inline">
+            <label class="radio">
+                <input type="radio" id="High_checkbox_change_sev" name = "sev_radio">
+                <span class="radio__input"></span>
+                <span class="radio__label">High</span>
+            </label>
+        </div>
+        <div class="form-group form-group--inline">
+            <label class="radio">
+                <input type="radio" id="Medium_checkbox_change_sev" name = "sev_radio">
+                <span class="radio__input"></span>
+                <span class="radio__label">Medium</span>
+            </label>
+        </div>
+        <div class="form-group form-group--inline">
+            <label class="radio">
+                <input type="radio" id="Low_checkbox_change_sev" name = "sev_radio">
+                <span class="radio__input"></span>
+                <span class="radio__label">Low</span>
+            </label>
+        </div>
+        <div class="form-group form-group--inline">
+            <label class="radio">
+                <input type="radio" id="Informational_checkbox_change_sev" name = "sev_radio">
+                <span class="radio__input"></span>
+                <span class="radio__label">Info</span>
+            </label>
+        </div>
+
+   <!-- <div class="col-2">
+        <label class="checkbox">
+            <input type="checkbox" id="Critical_checkbox_change_sev">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Critical</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="High_checkbox_change_sev">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;High</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="Medium_checkbox_change_sev">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;Medium</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="Low_checkbox_change_sev">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Low</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="Informational_checkbox_change_sev">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Info</span>
+        </label>
+    </div>-->
+    <div id="submit_button_container" class="col-2">
+        <button class="btn btn--small" onclick="changeSeverity()">Change</button>
+    </div>
+
+</div>
+
+
+<hr width="100%" align="center" style="background-color: #00bceb;">
+
+<div class = "row">
+    <div class="col-6" id="net_rule_container" style ="border: 1px solid #00bceb;">
+            <p>Net Rule:</p>
+            <div class="form-group base-margin-bottom">
+                <div class="form-group__text">
+                    <textarea id="net_rule_textarea" rows="5" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    <div class="col-6" id="net_advice_container" style ="border: 1px solid #00bceb;">
+            <p>Net Advice:</p>
+            <div class="form-group base-margin-bottom">
+                <div class="form-group__text">
+                    <textarea id="net_advice_textarea" rows="5" readonly></textarea>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<hr width="100%" align="center" style="background-color: #00bceb;">
+
+<div class = "row">
+    <div class="col-12" id="row_information_container" style ="border: 1px solid #00bceb;">
+        <p>Clicked Row Information:</p>
+            <div class="form-group base-margin-bottom">
+                <div class="form-group__text">
+                    <textarea id="clicked_row_info_textarea" rows="8"></textarea>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+<hr width="100%" align="center" style="background-color: #00bceb;">
+
+<div class = "row">
+    <div class="col-12" id="NCE_comment_container" style ="border: 1px solid #00bceb;">
+        <p>NCE Comment:</p>
+            <div class="form-group base-margin-bottom">
+                <div class="form-group__text">
+                    <textarea id="NCE_Comment_textarea" rows="10"></textarea>
+                    <label for="NCE_Comment_textarea">Write your comment for clicked Exception</label>
+                </div>
+            </div>
+        </div>
+    <a onclick="showNCEComments()">View Other NCE Comments</a>
+</div>
+
+<hr width="100%" align="center" style="background-color: #00bceb;">
+<p>Apply Comment to:</p>
+<div class = "row" id="apply_comment_container">
+
+    <div class="col-2">
+        <label class="checkbox">
+            <input type="checkbox" id="Critical_checkbox">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Critical</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="High_checkbox">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;High</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="Medium_checkbox">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;Medium</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="Low_checkbox">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Low</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="Info_checkbox">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Info</span>
+        </label>
+    </div>
+    <div class="col-2">
+        <label class="checkbox" >
+            <input type="checkbox" id="All_checkbox" checked="checked">
+            <span class="checkbox__input">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All</span>
+        </label>
+    </div>
+</div>
+
+<hr width="100%" align="center" style="background-color: #00bceb;">
+
+<div class = "row">
+    <div id="submit_button_container" class="col-4">
+        <button class="btn btn--large btn--justified" onclick="updateNCEComment()">Submit</button>
+    </div>
+    <div id="clear_button_container" class="col-4">
+        <button class="btn btn--large btn--justified" id ="NCE_comment_clear_button" onclick="clearNCEComment()">Clear</button>
+    </div>
+    <div id="close_button_container" class="col-4">
+        <button class="btn btn--large btn--justified" id ="NCE_comment_div_close_button"onclick="closeCommentwsDiv()">Close</button>
+    </div>
+</div>
+
+
+</div>
+
+<div id="other_NCE_comments_div" class="panel panel--bordered panel--raised panel--loose" style="z-index:100; position: fixed;bottom: 0%;right: 50%; height: 80%; width: 50%; box-shadow: 10px 10px 5px grey; border: 2px solid white; border-radius: 5px; overflow:auto; display: none; " display:table>
+
+<div class = "row" style ="border: 1px solid #00bceb;">
+    <div id="NCE_comments_table_name_container" class="col-6">
+        <p>Table Name will come here</p>
+    </div>
+    <div id="NCE_comments_exception_name_container" class="col-6">
+        <p>Exception Name will come here</p>
+    </div>
+</div>
+<hr width="100%" align="center" style="background-color: #00bceb;">
+<div class="row" style ="border: 1px solid #00bceb;">
+<div class="col-12" style="height: 90%; overflow:auto;" id="NCE_comments_table_container"display:table>
+</div>
+</div>
+<div class="row" style ="border: 1px solid #00bceb;">
+    <button class="btn btn--large btn--justified" id ="other_NCE_comment_div_close_button"onclick="otherNCECommentClose()">Close</button>
+</div>
+
+
+
+<div class="tooltip" style="display : none">
+  <span class="tooltiptext" id="helperTextID"></span>
+</div>
+
+
+        <div id="loader" style="z-index:100; position: fixed;bottom: 50%;right: 50%; overflow:auto; display: none; " class="loading-dots" aria-label="Loading, please wait...">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+
+<div class="modal modal--small hide" id="modal-small">
+    <div class="modal__dialog">
+        <div class="modal__content">
+            <a class="modal__close" onclick="closeModal('modal-small')"><span class="icon-close"></span></a>
+            <div class="modal__header">
+                <div class="modal__title">Login details for NP</div>
+            </div>
+            <hr width="100%" align="center" style="background-color: #00bceb;">
+            <div class="modal__body">
+               <p class="subtitle">Enter CEC Credentials</p>
+               CEC ID : &nbsp;&nbsp;&nbsp;&nbsp; <input type="text" size="25" id="cec_id"></input>
+           </br>
+           </br>
+           </br>
+               Password : &nbsp;&nbsp; <input type="password" size="25" id="pwd"></input>
+            </div>
+            <div class="modal__footer">
+                <button class="btn" onclick="authenticateUser()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal--large" id="modal-large" style="display:none">
+    <div class="modal__dialog">
+        <div class="modal__content">
+            <a class="modal__close" onclick="closeModal('modal-large')"><span class="icon-close"></span></a>
+            <div class="modal__header">
+                <div class="modal__title">Feedback Form</div>
+            </div>
+            <hr width="100%" align="center" style="background-color: #00bceb;">
+            <div class="modal__body">
+                        <label>
+                            Number of hours Saved during this audit using Audit Analysis tool :
+                        </br>
+                            <input name="hours_saved" id="hours_saved" type="number" maxlength="10"required>
+                        </label>
+                         </br>
+                          </br>
+                        <label>
+                            Please provide detailed feedack below :
+                        </br>
+                            <textarea id="detailed_feedback" rows="10" required></textarea>
+                        </label>
+                     </br>
+                      </br>
+                <div id="submit_button_container_2" class="col-4">
+                    <button class="btn btn--large btn--justified" onclick="updateFeedback()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
