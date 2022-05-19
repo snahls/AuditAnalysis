@@ -1,0 +1,4 @@
+flask
+requests>=2.20.0
+pycryptodome>=3.5.1
+python-jose[pycryptodome]

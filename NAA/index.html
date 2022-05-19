@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <link rel="icon" href="static/img/favicon.png" type="image/x-icon">
+      <link rel="stylesheet" type="text/css" href="/static/css/cui-standard.min.css">
+      <link rel="stylesheet" type="text/css" href="static/css/cisco_style.css">
+      <link rel="stylesheet" type="text/css" href="/static/css/frame.css">
+      <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+      <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+      <link rel="stylesheet" type="text/css" href="/static/css/Chart.css">
+      <meta name="msapplication-TileColor" content="#FFFFFF">
+      <meta name="msapplication-TileImage" content="img/mstile.png">
+      <meta name="msapplication-square70x70logo" content="img/mstile.png">
+      <meta name="msapplication-square150x150logo" content="img/mstile.png">
+      <meta name="msapplication-wide310x150logo" content="img/mstile.png">
+      <meta name="msapplication-square310x310logo" content="img/mstile.png">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>CNA Audit Visualizer</title>
+
+        <style>
+        .b {
+
+            position: fixed;
+            top: 50%;
+            left: 35%;
+
+
+            border: 3px solid black;
+            background-color: #1c96dd;
+            padding: 10px;
+        }
+    </style>
+<style>
+    * {
+  box-sizing: border-box;
+}
+
+.center {
+  text-align: left;
+  margin-top: 20%;
+  margin-bottom: 20%;
+  margin-left: 32%;
+
+}
+
+.ucs_center {
+      text-align: left;
+      margin-top: -26%;
+      margin-left: 24%;
+    }
+
+.ucs_contact{
+     text-align: left;
+      margin-top: 30%;
+      margin-left: 25%;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+  span {
+            display: table-cell;
+
+            color: white;
+
+        }
+
+</style>
+      <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+      <script src="static/js/styleguide.js"></script>
+      <script src="static/js/startup.js"></script>
+      <script type="text/javascript" src="/static/js/auth.js"></script>
+      <script type="text/javascript">
+         function loading(){
+            alert("Audit processing will start once file is uploaded. You will recieve a mail after the file is processed. Please allow upto 12 hours before reaching out to bgl-cx-bcs-audit@cisco.com")
+
+         //loader_div = '<div class="col-6"><div class="subheader"></div><div class="loading-dots" aria-label="Loading, please wait..."><span></span><span></span><span></span></div>'
+
+         //$("#loading").html("<br>File is getting processed. It may take some time. Result will be displayed soon...");
+         //$("#loading").append(loader_div)
+         //$("#content").hide();
+         }
+         function loading1(){
+
+         loader_div = '<div class="col-6"><div class="subheader"></div><div class="loading-dots" aria-label="Loading, please wait..."><span></span><span></span><span></span></div>'
+
+         $("#loading").html("<br>File is getting processed. It may take some time. Result will be displayed soon...");
+         $("#loading").append(loader_div)
+         $("#content").hide();
+         }
+      </script>
+   </head>
+<header class="header">
+    <div class="container">
+        <div class="header-panels">
+
+            <div class="header-panel header-panel--left">
+                <a class="header__logo" href="http://www.cisco.com" target="_blank"><span class="icon-cisco"></span></a>
+                <div class="header__title">Network Audit Analyzer</span></div>
+            </div>
+
+            <div class="header-panel header-panel--right">
+              <label id="naa_user_name"></label>&nbsp;&nbsp;
+                <div class="header-item dropdown">
+                    <a><span class="icon-user icon-size-24"></span></a>
+                    <div class="dropdown__menu">
+                      <a>Logout</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+</br></br>
+<body class="cui">
+
+<div id="content">
+<div class="se-pre-con">
+
+        <div class="content content--alt">
+            <div class="container-fluid">
+                <div class="row">
+
+
+  <div class="col-6" style="background-color:#1e4471;">
+    <div class="center">
+    <span style="font-size: 800%;">NAA</span>
+    </div>
+    <br>
+    <div class="ucs_center">
+    <span style="font-size: 250%; font-weight: 2%;" >Network Audit Analyzer</span>
+</div>
+    <div class="ucs_contact"><span style="font-size: 150%;">Contact- bgl-cx-bcs-audit@cisco.com</span></div>
+  </div>
+  <div class="col-3" style="background-color:#ffffff;">
+
+                        <div class="section">
+                              <!-- Table -->
+                              <!-- Here comes the form -->
+                              <div class="toast" style="background-color:#FFFFFF;">
+                                 <div class="toast__body">
+                                    <div class="toast__title">Upload ZIP for new Audit</div>
+                                    <br>
+                                    <div class="form-group base-margin-bottom">
+                                       <div class="form-group__text">
+                                          <form enctype="multipart/form-data" id="uploadZipForm" method="post" action="http://10.123.219.166:8001/upload">
+                                             <label>
+                                             CEC Email ID*
+                                             <input name="emp_cec_id" id="emp_cec_id" type="text" readonly>
+                                             </label>
+                                             <br><br>
+                                             <label>
+                                             TOP ID
+                                             <input name="top_id" id="top_id" type="number" value="0">
+                                             </label>
+                                             <br><br>
+                                            <label>
+                                             Customer PID*
+                                             <input name="customer_PID" id="customer_PID" type="text" required>
+                                             </label>
+                                             <br><br>
+                                             <label>
+                                             CpyKey*
+                                             <input name="customer_key" id="customer_key" type="number" required>
+                                             <br>
+
+                                             <a onclick="getgroupname()">Get Customer Details</a>
+                                             </label>
+                                             <br><br>
+                                            <label>
+                                             Customer Name*
+                                             <input name="customer_name" id="customer_name" type="text" required readonly>
+                                             </label>
+                                            <br><br>
+                                             <label>
+                                            Select group
+                                            <select name="group_id" id="group_selector" ></select>
+                                            <!-- <input name="audit_id_prev" id="audit_id_prev" type="number" required> -->
+                                            </label>
+                                            <br><br>
+
+   
+                                             <br><br>
+                                             Audit ID*
+                                             <input name="audit_id" id="audit_id" type="number" required>
+                                             </label>
+                                             <br><br>
+                                             <label>
+                                             Audit Type*
+                                             <select name="audit_type_dropdown_name" id="audit_type_dropdown"></select>
+                                             </label>
+                                             <br><br>
+                                             <label for="zipfile">Upload File:
+                                             <input type="file" accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" id="zipfile" name="zipfile" required>
+                                             </label>
+                                             <br>
+                                             <hr width="100%" align="center" style="background-color: #00bceb;">
+                                             <br>
+                                             <input id = "submitBtn" type="submit" form="uploadZipForm" onclick="loading();" disabled>
+                                          </form>
+                                       </div>
+                                    </div>
+                                 </div>
+                           </div>
+                         </div>
+                       </div>
+
+                           <!--Here forms end -->
+<div class="col-3" style="background-color:#ffffff;">
+                        <div class="section">
+                           <div class="toast" style="background-color:#FFFFFF;">
+                              <div class="toast__body">
+                                 <div class="toast__title">Open Previous Audit</div>
+                                 <br>
+                                 <div class="form-group base-margin-bottom">
+                                    <div class="form-group__text">
+                                       <form enctype="multipart/form-data" method="post" action="http://10.123.219.166:8001/getPreviousData" id="getPreviousDataForm">
+                                          <label>
+                                          CEC Email ID*
+                                          <input name="emp_cec_id_2" id="emp_cec_id_2" type="text" readonly>
+                                          </label>
+                                          <br><br>
+                                          <label>
+                                          CpyKey*
+                                          <input name="customer_key_prev" id="customer_key_prev" type="number" maxlength="6"required>
+                                          <a onclick="getBasicInfo()">Get Audits</a>
+                                          </label>
+                                          <br><br>
+                                          <label>
+                                          Customer Name*
+                                          <input name="customer_name_prev" id="customer_name_prev" type="text" readonly>
+                                          </label>
+                                          <br><br>
+                                           Customer PID*
+                                          <input name="customer_PID_2" id="customer_PID_2" type="text" readonly>
+                                          </label>                                         
+                                          <br><br>
+                                          <label>
+                                             Select Audit
+                                             <select name="audit_name_prev" id="audit_selector" onchange="getAuditInfo(this.value)"></select>
+                                          <!-- <input name="audit_id_prev" id="audit_id_prev" type="number" required> -->
+                                          </label>
+                                          <br><br>
+                                          <label>
+                                          Audit Type*
+                                          <input name="audit_type_prev" id="audit_type_prev" type="text" readonly>
+                                          </label>
+                                          <br><br>
+                                          <input type="submit" form="getPreviousDataForm" onclick="loading1();">
+                                       </form>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+    <br>
+    <br>
+                    <div>
+                        <button class="btn btn--large btn--wide" style =" background-color:#1e4471; width:100%;"><a href ="http://10.123.219.166:8500" target="_blank" style="color:white; text-decoration:none;">Audit Comparator</a></button>
+                   </div>
+
+  </div>
+             <footer>
+
+
+                        <h5> NOTE </h5>
+                        <br>
+                        <ul>
+                            <li> <b>FILE Upload:</b> Upload ZIP file generated by CNA tool along with relevant details. Note that it may take upto 10 minutes for analysis to complete </li>
+                            <li> <b>CNA Audits:</b> If you have not yet initiated CNA audit, you can visit the following link : </li>
+                            <li><b>Link :</b> https://at-tools-prd-11.cisco.com/ASCNA/welcome.do</li>
+
+                        </ul>
+
+            </footer>
+             </div>
+
+            </div>
+            </div>
+         </div>
+        </div>
+    </div>
+    <div class="modal modal--small hide" id="modal-small">
+    <div class="modal__dialog">
+        <div class="modal__content">
+            <a class="modal__close" onclick="closeModal('modal-small')"><span class="icon-close"></span></a>
+            <div class="modal__header">
+                <div class="modal__title">Login details for NP</div>
+            </div>
+            <hr width="100%" align="center" style="background-color: #00bceb;">
+            <div class="modal__body">
+               <p class="subtitle">Enter CEC Credentials</p>
+               CEC ID : &nbsp;&nbsp;&nbsp;&nbsp; <input type="text" size="25" id="cec_id"></input>
+           </br>
+           </br>
+           </br>
+               Password : &nbsp;&nbsp; <input type="password" size="25" id="pwd"></input>
+            </div>
+            <div class="modal__footer">
+                <button class="btn" onclick="authenticateUser()">Submit</button>
+                <button class="Closebtn" onclick="closeModal('modal-small')">Close</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</body>
+</html>

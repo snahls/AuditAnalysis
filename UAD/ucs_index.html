@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="http://auditanalysis.cisco.com:8012/static/img/favicon.png" type="image/x-icon">
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <meta name="msapplication-TileImage" content="img/mstile.png">
+    <meta name="msapplication-square70x70logo" content="img/mstile.png">
+    <meta name="msapplication-square150x150logo" content="img/mstile.png">
+    <meta name="msapplication-wide310x150logo" content="img/mstile.png">
+    <meta name="msapplication-square310x310logo" content="img/mstile.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <title>UCS Health Check</title>
+        <style>
+        /* .b {
+            position: fixed;
+            top: 50%;
+            left: 35%;
+            border: 3px solid black;
+            background-color: #1c96dd;
+            padding: 10px;
+        } */
+        #loader {
+            /* Uncomment this to make it run! */
+            /*
+                animation: loader 5s linear infinite;
+            */
+
+            position: absolute;
+            top: calc(50% - 20px);
+            left: calc(50% - 20px);
+        }
+        @keyframes loader {
+            0% { left: -100px }
+            100% { left: 110%; }
+        }
+        #box {
+            width: 50px;
+            height: 50px;
+            background: #fff;
+            animation: animate .5s linear infinite;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 3px;
+        }
+        @keyframes animate {
+            17% { border-bottom-right-radius: 3px; }
+            25% { transform: translateY(9px) rotate(22.5deg); }
+            50% {
+                transform: translateY(18px) scale(1,.9) rotate(45deg) ;
+                border-bottom-right-radius: 40px;
+            }
+            75% { transform: translateY(9px) rotate(67.5deg); }
+            100% { transform: translateY(0) rotate(90deg); }
+        }
+        #shadow {
+            width: 50px;
+            height: 5px;
+            background: #000;
+            opacity: 0.1;
+            position: absolute;
+            top: 59px;
+            left: 0;
+            border-radius: 50%;
+            animation: shadow .5s linear infinite;
+        }
+        @keyframes shadow {
+            50% {
+                transform: scale(1.2,1);
+            }
+        }
+        footer {
+            text-align: left;
+            padding: 3px;
+            background-color: #1c96dd;
+            color: white;
+        }
+        .dropdown-fields select {
+    /* Hide default arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Style the dropdown box */
+    width: 100%;
+    padding: 0 10px;
+    }
+
+    .dropdown-fields {
+    position: relative;
+    }
+
+    .dropdown-fields select, .dropdown-fields::after {
+    height: 40px;
+    }
+
+    .dropdown-fields::after {
+    content: "\25bc"; /* HTML symbol */
+    /* Reposition */
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 0 10px;
+    line-height: 40px; /* Vertical center text */
+    }
+    </style>
+<style>
+    * {
+  box-sizing: border-box;
+}
+
+.center {
+  text-align: left;
+  margin-top: 20%;
+  margin-bottom: 20%;
+  margin-left: 32%;
+
+}
+
+.checkbox_label{
+    padding-left: 5px;
+    margin: 5px;
+}
+
+.ucs_center {
+      text-align: left;
+      margin-top: -26%;
+      margin-left: 24%;
+    }
+
+.ucs_contact{
+     text-align: left;
+      margin-top: 30%;
+      margin-left: 25%;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 50%;
+
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+  span {
+            display: table-cell;
+
+            color: white;
+
+        }
+
+</style>
+
+        <!--link rel="stylesheet" href="https://scripts.cisco.com/api/v2/tasks/ucs_analyzer/code/css/cui-standard.min.css"-->
+        <link rel="stylesheet", href="static/css/cisco_style.css">
+        <!--link rel="stylesheet", href="static/css/progress_style.css"-->
+        <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            // function loading(){
+
+            //     $("#loading").html("<br>File is getting processed. It may take some time. Result will be displayed soon...");
+            //     $("#content").hide();
+            // }
+
+            $(document).ready(function(){
+                $("#audit_checkbox").prop("disabled",true);
+                $('#error').hide();
+                $("form").submit(function(){
+                    $("#loader").show()
+                    $("#load-text").show()
+                    $("#content").hide()
+                    $("body").css("background", "#1e4471");
+                    $("body").css("overflow", "#hidden");
+                });
+                $('.ddluniqueID').hide();
+                $(".checkbox__input").on('click',function(){
+                    if($("#audit_checkbox").prop("disabled")){
+                        return false;
+                    }
+                    if($("#audit_checkbox:checked").length==0){
+                        $( "#submitButton").val("View Audit")
+                        $(".txtuniqueID").hide();
+                        $(".ddluniqueID").show();
+                        $('.fileupload').hide()
+                        //$('.showtechfileupload').hide();
+                        var UniqueIDdata={
+                            name: $("#customer_name").val(),
+                            pid: $("#customer_pid").val()
+                        }
+                        $.ajax({
+                            url : "http://auditanalysis.cisco.com:8012/getUniqueIDs",
+                            type : "POST",
+                            async: false,
+                            data:UniqueIDdata,
+                            success : function(data) {
+                            console.log(data)
+                            var res=JSON.parse(data)
+                            $('#uniqueIDs')
+                            .find('option')
+                            .remove().end();
+                            $.each(res, function(index,value) {
+                               $('#uniqueIDs').append('<option value="' + value.uniqueID + '">' + value.uniqueID + '</option>');
+                             });
+                            }
+                        });
+
+                    }
+                    else{
+                        $( "#submitButton").val("Upload File")
+                        $(".txtuniqueID").show();
+                        $(".ddluniqueID").hide();
+                        $('.fileupload').show();
+                        //$('.showtechfileupload').show();
+                    }
+                });
+                $("#customer_name").change(function(){
+                    $('#uniqueIDs option').remove();
+                    if($("#customer_name").val()=="" || $("#customer_pid").val()==""){
+                        $("#audit_checkbox").prop("disabled",true);
+                    }
+                    else{
+                        $("#audit_checkbox").prop("disabled",false);
+                    }
+                });
+
+                $("#customer_uniqueID").change(function(){
+                        
+                });
+                
+                
+                $("#customer_pid").change(function(){
+                    $('#uniqueIDs option').remove();
+                    if($("#customer_name").val()=="" || $("#customer_pid").val()==""){
+                        $("#audit_checkbox").prop("disabled",true);
+                    }
+                    else{
+                        $("#audit_checkbox").prop("checked",false);
+                        $("#audit_checkbox").prop("disabled",false);
+                    }
+                });
+            });
+
+            
+            function uploadData(event){
+                if($("#audit_checkbox:checked").length==0){
+                    var UniqueIDdata={
+                            name: $("#customer_name").val(),
+                            pid: $("#customer_pid").val()
+                        }
+                        $.ajax({
+                            url : "http://auditanalysis.cisco.com:8012/getUniqueIDs",
+                            type : "POST",
+                            async: false,
+                            data:UniqueIDdata,
+                            success : function(data) {
+                                var res=JSON.parse(data);
+                                for (i=0; i < res.length; i++) {
+                                    if (res[i].uniqueID == $("#customer_uniqueID").val()){
+                                        $('#error').show();
+                                        event.preventDefault();
+                                        return false;
+                                    }
+                                    else{
+                                        $('#error').hide();
+                                    }  
+                                }
+                            }
+                        });
+                    $( "#customer_uniqueID" ).prop("required",true);
+                    $( "#zipfile" ).prop("required",true);
+                }
+                else{
+                    $( "#customer_uniqueID" ).prop("required",false);
+                    $( "#zipfile" ).prop("required",false);
+                }
+
+                
+            }
+
+            var ssocookie=document.cookie.match('(^|;)\\s*' + "uad_auth" + '\\s*=\\s*([^;]+)');
+  if(ssocookie=="")
+  {
+    window.location.href="http://auditanalysis.cisco.com:8012/"
+  }
+        </script>
+</head>
+<body class="cui">
+
+    <div id="loader" style="display: none;">
+        <div id="shadow"></div>
+        <div id="box"></div>
+    </div>
+    <div id="load-text" style="display: none; position: relative; ">
+        <p style="font-size: 15px; font-weight: lighter; color: #ffffff; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); margin-top: 380px;">Please wait while file is being uploaded!</p>
+    </div>
+
+<div id="content">
+<div class="se-pre-con">
+    <nav class="header" id="styleguideheader" role="navigation">
+            <div class="container-fluid">
+                <div class="header-panels">
+                    <div class="header-panel hidden-md-down">
+                       <!-- <a class="header__logo" href="http://www.cisco.com" target="_blank">
+                            <span class="icon-cisco"></span>
+                        </a>-->
+                    </div>
+                    <div class="header-panel header-panel--center base-margin-left base-margin-right hidden-lg-up">
+                        <a class="header__logo" href="http://www.cisco.com" target="_blank">
+                            <span class="icon-cisco"></span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+        <div class="content content--alt">
+            <div class="container-fluid">
+                <div class="row">
+
+
+  <div class="column" style="background-color:#1e4471;">
+    <div>
+      <a href="http://www.cisco.com" target="_blank">
+      <img style="width: 40%; height: 5%; margin-left: 5%; margin-top: 3%" src="/static/img/logo2.png">
+    </a>
+    </div>
+    <div class="center">
+    <span style="font-size: 800%;">UAD</span>
+    </div>
+    <br>
+    <div class="ucs_center">
+    <span style="font-size: 250%; font-weight: 2%;" >UCS Audit Dashboard</span>
+</div>
+    <div class="ucs_contact"><span style="font-size: 150%;">Contact- bgl-cx-bcs-ucs-audit@cisco.com</span></div>
+  </div>
+  <div class="column" style="background-color:#ffffff;">
+     <div class="toast__body center">
+                        <div style="font-weight: bold; font-size: 25px;" class="toast__title">ENTER DETAILS</div><br>
+
+                                <div class="form-group base-margin-bottom">
+                                    <div class="form-group__text">
+                                    <form enctype="multipart/form-data" id="form_data" method="post" action="/overviewpage" name="details">
+
+                                      <label style="font-weight: bold;">Customer Name* : &nbsp;
+                                       <span> <input style="background-color: #dee2e6;" name="customer_name" id="customer_name" type="text" required> </span>
+                                        </h4>
+                                        <br><br>
+                                        <label style="font-weight: bold;">
+                                         Customer  &nbsp; PID* &nbsp; : &nbsp;
+                                        <span> <input style="background-color: #dee2e6;" name="customer_pid" id="customer_pid" type="text" required> </span>
+                                        </label>
+                                        <br><br>
+                                        <div>
+                                            <label class="checkbox">
+                                                <input type="checkbox" id="audit_checkbox" name="isOldAudit"/>
+                                                <span class="checkbox__input"></span>
+                                                <label style="font-weight: bold;" class="checkbox_label"> &nbsp; Work on old Audit</label>
+                                            </label>
+                                    </div>
+
+                                      <label style="font-weight: bold;" class="txtuniqueID">
+                                        UNIQUE  &nbsp; ID* &nbsp; : &nbsp;
+                                       <span> <input style="background-color: #dee2e6;" name="customer_uniqueID" id="customer_uniqueID" type="text" > </span>
+                                       <div id="error"><br><label style="color: red;">This unique id already exist for this Customer name and PID</label></div>
+                                       </label><br><br>
+                                       
+                                       <label style="font-weight: bold;" class="ddluniqueID" for="uniqueIDs">
+                                        UNIQUE  &nbsp; ID* &nbsp; : &nbsp;
+                                       <span> <select id='uniqueIDs' name="uniqueIDs" class="" style="width: 150px;border-radius: 50px;">
+                                        <option >Select</option>    
+                                    </select> </span>
+                                       </label>
+
+                                        <label style="font-weight: bold;" class="fileupload" for="zipfile">Upload DCAF File: &nbsp;
+
+                                          <span>  <input style="background-color: #dee2e6;" type="file" accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" id="zipfile" name="zipfile" ></span>
+                                        </label>
+                                        <br><br>
+                                        <!-- <label style="font-weight: bold;" class="showtechfileupload" for="zipfile">Upload Show Tech File: &nbsp;
+                                        <span>  <input style="background-color: #dee2e6;width: 270px;" type="file" accept="zip,application/octet-stream,application/zip,application/x-zip,application/x-zip-compressed" id="zipfile" name="zipfile"></span>
+                                        </label>
+                                        <br><br> -->
+                                         <span> <input style="font-weight: bold; background-color: #dee2e6;" type="submit" onclick="uploadData(event)" value="Upload File" id="submitButton"> </span><br>
+
+                                    </form>
+                                    </div>
+
+
+                        </div>
+                        <p><a href="https://eurl.io/#SPt1_l2Vn">Click here</a> to join the community to ask any question</p>
+  </div>
+
+
+
+
+
+                            <!-- Table -->
+
+                                    <!-- Here comes the form -->
+
+                <!--Here forms end -->
+
+
+
+                                </div>
+                            </div>
+             <footer>
+                <ul>
+                    <table>
+                        <tr>
+                            <td><b style="font-size: 20px;">NOTE</b></td>
+                            <td><img style="width: 20px; height: 20px;" src="/static/img/notes.png"></td>
+                        </tr>
+                    </table>
+                    <li> <b>DCAF FILE :</b> Upload DCAF Zip folder generated from DCAF Portal. If you have more than one instances of DCAF Collector installation, please zip all the downloaded report and create a zip and then upload</li>
+                </ul>
+            </footer>
+             </div>
+
+            </div>
+            </div>
+         </div>
+        </div>
+    </div>
+</body>
+</html>

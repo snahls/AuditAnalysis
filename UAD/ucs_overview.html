@@ -1,0 +1,2425 @@
+<!--DOCTYPE html-->
+<html>
+<head>
+    <title>UCS Dashboard</title>
+<style type="text/css">
+    @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
+
+    @import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
+    #generate_report_link{
+  background-color: lightgrey;
+  color: black;
+  border: 2px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 4px;
+    }
+
+#generate_report_link:hover {
+  background-color: lightslategray; 
+  color: white;   
+}
+
+    .input_text {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+
+.input_text:focus{
+border:2px solid #0c83ba;
+}
+
+    .fa-2x {
+    font-size: 2em;
+    }
+    .severity_text{
+        padding: 5px;
+        border-radius: 5px;
+        font-weight: 600;
+    }
+    .fa {
+    position: relative;
+    display: table-cell;
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    vertical-align: middle;
+    font-size:20px;
+    }
+    label.error{
+        color: red !important;
+    }
+
+    .main-menu:hover,nav.main-menu.expanded {
+    width:250px;
+    overflow:visible;
+    }
+    
+    /* #bdb_data_table_wrapper{
+        margin-top: 3%;
+    } */
+
+    td input{
+        margin-top: 0px !important;
+    }
+
+    /* #inventory_data_table,#bdb_data_table,#fault_data_table{
+        margin-top: 1%;
+    } */
+
+    /* #bp_data_table_wrapper{
+        margin-top: 2%;
+    }
+    #fault_data_table_wrapper,#inventory_data_table_wrapper{
+        margin-top: 3%;
+    } */
+
+    tbody>tr>:nth-child(8){
+        text-align:center;
+    }
+
+    .main-menu {
+    background:#212121;
+    border-right:1px solid #e5e5e5;
+    position:absolute;
+    top:0;
+    bottom:0;
+    height:100%;
+    left:0;
+    width:60px;
+    overflow:hidden;
+    -webkit-transition:width .05s linear;
+    transition:width .05s linear;
+    -webkit-transform:translateZ(0) scale(1,1);
+    z-index:1000;
+    }
+
+    .main-menu>ul {
+    margin:7px 0;
+    }
+
+    .main-menu li {
+    position:relative;
+    display:block;
+    width:250px;
+    }
+
+    .main-menu li>a {
+    position:relative;
+    display:table;
+    border-collapse:collapse;
+    border-spacing:0;
+    color:#999;
+    font-size: 14px;
+    text-decoration:none;
+    -webkit-transform:translateZ(0) scale(1,1);
+    -webkit-transition:all .1s linear;
+    transition:all .1s linear;
+    
+    }
+
+    .main-menu .nav-icon {
+    position:relative;
+    display:table-cell;
+    width:60px;
+    height:36px;
+    text-align:center;
+    vertical-align:middle;
+    font-size:18px;
+    }
+
+    .main-menu .nav-text {
+    position:relative;
+    display:table-cell;
+    vertical-align:middle;
+    width:190px;
+    }
+
+    .main-menu>ul.logout {
+    position:absolute;
+    left:0;
+    bottom:0;
+    }
+
+    .no-touch .scrollable.hover {
+    overflow-y:hidden;
+    }
+
+    .no-touch .scrollable.hover:hover {
+    overflow-y:auto;
+    overflow:visible;
+    }
+
+    a:hover,a:focus {
+    text-decoration:none;
+    }
+
+    nav {
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -o-user-select:none;
+    user-select:none;
+    }
+
+    nav ul,nav li {
+    outline:0;
+    margin-right:20px;
+    padding:0;
+    }
+    .main-menu li:hover>a,nav.main-menu li.active>a,.dropdown-menu>li>a:hover,.dropdown-menu>li>a:focus,.dropdown-menu>.active>a,.dropdown-menu>.active>a:hover,.dropdown-menu>.active>a:focus,.no-touch .dashboard-page nav.dashboard-menu ul li:hover a,.dashboard-page nav.dashboard-menu ul li.active a {
+    color:#fff;
+    background-color:#5fa2db;
+    }
+    .area {
+    float: left;
+    background: #e2e2e2;
+    width: 100%;
+    height: 100%;
+    }
+    @font-face {
+    font-family: 'Titillium Web';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
+    }
+    .ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix.ui-draggable-handle {
+        background: #00bceb;
+    }
+
+    #editpopup, #feedback  { 
+    display: none;
+    box-shadow:0 4px 8px 0 rgba(0,0,0,0.2);
+    padding: 2em;
+    width: 400px;
+    text-align: center;
+    background: #fff;
+    position: fixed;
+    top:54%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    border-radius: 6px;
+    
+    }
+
+    #feedback {
+        z-index: 10000;
+    }
+    .ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-draggable.ui-resizable {
+
+        position: fixed !important;
+        left: 20%;
+        top: 15%;
+    }
+
+    #b1 {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 13px;
+    }
+    .overlay,.overlayshowtech{
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            background: rgba(255,255,255,0.8) url("http://auditanalysis.cisco.com:8012/static/img/Spinner3.gif") center no-repeat;
+        }
+        /* Turn off scrollbar when body element has the loading class */
+    .loading{
+            overflow: hidden;   
+        }
+        /* Make spinner image visible when body element has the loading class */
+    .loading .overlay , .loading .overlayshowtech{
+            display: block;
+        }
+    .toast__body{
+        width: 100%;
+    }
+    #driver_disp , .toast, .section{
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    .submitButton{
+        margin-top: 16px !important;
+        width: 200px !important;
+        font-weight: bold !important;
+        background-color: #e8f0fe !important;
+        border-radius: 5px !important;
+        line-height: normal;
+    }
+    .info{
+        margin-top: 10px;
+        background-color: #f1e0e0;
+        border: solid black 1px;
+        width:80%;
+        padding:15px;
+        font-family: 'CiscoSans';
+        font-weight: 400;
+        border-radius: 5px;
+    }
+
+    .dropdown-fields select {
+    /* Hide default arrow */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Style the dropdown box */
+    width: 100%;
+    padding: 0 10px;
+    }
+
+    .dropdown-fields {
+    position: relative;
+    }
+
+    .dropdown-fields select, .dropdown-fields::after {
+    height: 40px;
+    }
+
+    .dropdown-fields::after {
+    content: "\25bc"; /* HTML symbol */
+    /* Reposition */
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 0 10px;
+    line-height: 40px; /* Vertical center text */
+    }
+    .close, .x {
+    position:absolute;
+    top:5px;
+    right:5px;
+    width:20px;
+    height:20px;
+    cursor:pointer;
+    border-radius:8px;
+    background-color:#7080af;
+    clip-path: polygon(0 10%,10% 0,50% 40%,89% 0,100% 10%,60% 50%,100% 90%,90% 100%,50% 60%,10% 100%,0 89%,40% 50%);
+    }
+    .deletebuttondiv{
+        width: 100%;
+        position: relative;
+        margin-bottom: 3px;
+        /* background-color: white; */
+        /*padding: 5 0;*/
+    }
+    .dataTables_wrapper .dataTables_filter {
+        margin-right:15px;
+    }
+                               
+</style>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+<link href="static/css/cui-standard.min.css" rel="stylesheet" type="text/css">
+<link href="static/css/cisco_style.css" rel="stylesheet" type="text/css">
+<link href="/static/css/index.css" rel="stylesheet" type="text/css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.9/js/dataTables.fixedHeader.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="static/js/growl.js" type="text/javascript"></script>
+<link href="static/css/growl.css" rel="stylesheet" type="text/css" /> 
+<script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="static/js/paginator.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.4.0/libs/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.4.0/dist/pptxgen.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.4.0/dist/pptxgen.bundle.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+<!--ppt-->
+<script>
+    var fault_data;
+    var bp_data;
+    var stats;
+    var eoldata;
+    var fcdata;
+    var portcapacitydata;
+    var bdbdata;
+    var serverdata;
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    var db_name;
+    var cust_name;
+    var username;
+    var tkn;
+    debugger;
+    db_name='{{db_name}}';
+    cust_name='{{customer_name}}';
+    username='{{username}}';
+    tkn='{{token}}';
+    window.history.pushState({}, document.title, window.location.pathname);
+    
+    //var feedback='{{feedback}}'
+    function isEmpty(){
+        let hrs=document.getElementById('fhrs').value;
+        let txt=document.getElementById('ftxt').value;
+        if(hrs!='' && txt!=''){
+            document.getElementById('generate_report_link').removeAttribute('disabled');
+        }
+    }
+
+    function reportfunc(){
+        document.location.href="http://auditanalysis.cisco.com:8012/gen_report?db_name="+db_name+"&cust_name="+cust_name+"&username="+username;
+        t=document.getElementById('fhrs').value;
+        f= document.getElementById('ftxt').value;
+        $.ajax({
+                url: "/feedbackdata?db_name="+db_name+"&cust_name="+cust_name+"&pid={{pid}}&uid={{uid}}",
+                type: "POST",
+                data:{t:t, f: f}
+            })
+            .fail(function(){
+                $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+                console.log("error occurred")
+            });
+        
+        document.getElementById('fhrs').value='';
+        document.getElementById('ftxt').value='';
+    }
+
+
+    $(document).ready(function(){
+
+        $('.servertablediv').hide();
+
+        // var reportLink = document.getElementById('generate_report_link');
+        // reportLink.href="http://auditanalysis.cisco.com:8012/gen_report?db_name="+db_name+"&cust_name="+cust_name;
+        $('#datacontainer').hide();
+
+
+        $('.close').on('click',function(){
+            $('#editpopup').fadeToggle();
+        });
+        $('.x').on('click',function(){
+            $('#feedback').fadeToggle();
+        });
+
+        $('#generate_report_link').on('click',function(){
+            $('#feedback').fadeToggle();
+        });
+
+        var td;
+        
+        //$.get("http://127.0.0.1:5000/getOverviewData", function(data, status){
+        $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/getOverviewData?db_name="+db_name,
+            type : "get",
+            async:false,
+            success : function(data) {
+                jsondata = JSON.parse(data)[0]
+            
+                $("#num_domain").html(jsondata.num_domain)
+                $("#num_server").text(jsondata.num_b_server)
+                $("#num_sp").text(jsondata.num_serv_profile)    
+                $("#num_FI").text(jsondata.num_FI)
+                $("#num_chassis").text(jsondata.num_chassis)
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+
+        $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/faultdata?db_name="+db_name,
+            type : "get",
+            async:false,
+            success : function(data) {
+                fault_data=data;
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+
+        $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/bpdata?db_name="+db_name,
+            type : "get",
+            async:false,
+            success : function(data) {
+                bp_data=data;
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+
+        $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/GetOSList?db_name="+db_name,
+                        // type: "GET",
+                        type: "POST",
+                        success : function(data) {
+                            OSlist=JSON.parse(data)
+                            $.each(OSlist, function (index, value) {
+                                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                                // $('#os').append('<option value="' + value + '">' + value + '</option>');
+                                $('#os').append('<option value="' + [value.T_ID,value.ID]  + '">' + value.OSVENDOR + '</option>');
+                            });
+                        },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+                    })
+        
+        $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/statsdata?db_name="+db_name,
+            type : "get",
+            async:false,
+            success : function(data) {
+                stats=data;
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+        
+        $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/eoldata?db_name="+db_name,
+            type : "get",
+            async:false,
+            success : function(data) {
+                eoldata=data;
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+
+        
+        $.get("http://auditanalysis.cisco.com:8012/portcapacity?db_name="+db_name, function(data, status){
+            portcapacitydata=data;
+        });
+        
+        $.get("http://auditanalysis.cisco.com:8012/bdbdata?db_name="+db_name, function(data, status){
+            bdbdata=data;
+        });
+
+       
+        
+
+        $(document).on("dblclick", ".editable",function(){
+            var type = $(this).data("type")
+            var value = $(this).text()
+            var sid= $(this).data('id').split('__')[1]
+            if(sid=='fault_id'){
+            if(type=='Description' || type=='Timestamp'){
+             value = $(this).html();
+            value=value.replaceAll('<br><br>','\n\n').replaceAll('<br>&nbsp;&nbsp;&nbsp;&nbsp;','\t')
+            }
+        }
+        if(sid=='bdb_data'){
+            if(type=='Domain' || type=='Evidence'){
+             value = $(this).html();
+            value=value.replaceAll('<br>\n<br>','\t\n\n')
+            }
+        }
+            //starts
+            var row = $(this).closest('tr');
+            td=$(this).closest('td');
+            var Code=row.find("td:eq(4)").text();
+            var el = this;
+            while ((el = el.parentElement) && el.nodeName.toUpperCase() !== 'TABLE');
+            var tableid= el.id;
+            //code="F0276"
+            Code=Code.trim();
+            //ends
+            var input = "";
+            if(type=='Recommendation'|| type=='Audit Recommendation'){
+                    $('.displayall').html("<input id='b1' type='button' class='disprecommendationbtn' value='Display All Recommendations'/>")
+                    $('.displayall').show();
+            }
+            else{
+                $('.displayall').hide();
+            }
+            //console.log("input string become: "+ input)
+            // $(this).html(input);
+            $('.modal_text').val(value);
+            //$(this).removeClass("editable");
+            $('#editpopup').fadeToggle();
+            $(".disprecommendationbtn").click({tableid:'"'+tableid+'"',code:Code},showall);
+            $(".savebtn").click({Tableid:tableid},savefn);
+            
+        });
+        //$(document).on("click", ".savebtn", function(){
+        function savefn(event){
+            var tid=event.data.Tableid;
+            var value = $("textarea.input-data").val();
+            //var td = $("textarea.input-data").parents("td").last();
+            //
+            //var tableid= ($(td).parents("table")).id;
+            //console.log("clicked table id in save"+tableid);
+            // $("textarea.input-data").remove();
+            if($('#editpopup').is(':visible')){
+                $('#editpopup').fadeToggle();
+            }
+            if(value.toLowerCase().replaceAll(" ",'')=='medium'){
+                value='Medium'
+            }
+            else if(value.toLowerCase().replaceAll(" ",'')=='high'){
+                value='High'
+            }
+            else if(value.toLowerCase().replaceAll(" ",'')=='low'){
+                value='Low'
+            }
+            else if(value.toLowerCase().replaceAll("-",'').replaceAll(" ",'')=='infoonly'){
+                value='Info-only'
+            }
+            else if(value.toLowerCase().replaceAll(" ",'')=='needtofillbynce'){
+                value="Need to fill by NCE"
+            }
+
+            var type = td.data("type")
+
+            var fid= td.data('id').split('__')[1]
+
+            if(fid=='fault_id'){
+                if(type=='Description' || type=='Timestamp'){
+            value=value.replaceAll('\n\n','<br><br>').replaceAll('\t','<br>&nbsp;&nbsp;&nbsp;&nbsp;')
+            }}
+
+            if(fid=='bdb_data'){
+                if(type=='Domain' || type=='Evidence'){
+                    value=value.replaceAll('\t\n\n','<br>\n<br>')
+            }}
+
+            td.html(value);
+            
+            //console.log("value of this.id is: "+ $(this).id)
+            // var type = td.data("type")
+            sendToServer(td.data("id"), value, type)
+            //start rebind
+            //var tbl = document.getElementById(tableid); 
+            // if(tid){tid.parentNode.removeChild(tid)};
+            // let tab = document.getElementById('fault_data_table');
+            // tab.remove();
+            
+            //end
+            //window.location.reload();
+            
+            
+            // if(tid=='fault_data_table'){
+            //     $('#fault_data_table').dataTable().fnClearTable();
+            //     $('#fault_data_table').dataTable().fnDestroy();
+            //     create_tab_table('fault_id', 'Faults')
+            //     $('#fault_id').click();
+            // }
+            // else if(tid=='bdb_data_table'){
+            //     create_tab_table('bdb_data', 'Show Tech Logs')
+            //     $('#bdb_data').click();
+            // }
+            // else if(tid=='inventory_data_table'){
+            //     //$('#inventory_data_table').dataTable().fnClearTable();
+            //    // $('#inventory_data_table').dataTable().fnDestroy();
+            //     create_eol()
+            //     $('#inv_id').click();
+            // }
+            // else if(tid=='bp_data_table'){
+            //     $('#bp_data_table').dataTable().fnClearTable();
+            //     $('#bp_data_table').dataTable().fnDestroy();
+            //     create_tab_table('bp_id', 'Best Practice Exceptions');
+            //     $('#bp_id').click();
+            // }
+            $(".savebtn").unbind('click',savefn)
+
+        
+    }
+        function sendToServer(id, value, type ){
+
+            $.ajax({
+                url: "/dataSendBack?db_name="+db_name,
+                type: "POST",
+                data:{id:id, value:value, type: type}
+            })
+            .fail(function(){
+                $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+                console.log("error occurred")
+            });
+
+            // $.ajax({Recheck
+            //     url: "/dataSend?db_name="+db_name,
+            //     type: "POST",
+            // })
+            // .fail(function(){
+            //     console.log("error occurred")
+            // });
+
+        }
+        //Export2Word()
+        //$(".disprecommendationbtn").click({tableid:'"'+tableid+'"',code:'"'+code+'"'},showall);
+        $('#domain').click();
+         
+    });
+
+    function selectfn(){
+           // alert('inside selectfn')
+            $('#select_all').click()
+            $('#select_all').click()
+            $('#select_all').on('click',function(){
+                if(this.checked){
+                    $('.checkbox').each(function(){
+                        this.checked = true;
+                    });
+                }else{
+                    $('.checkbox').each(function(){
+                        this.checked = false;
+                    });
+                }
+            });
+            
+            $('.checkbox').on('click',function(){
+                if($('.checkbox:checked').length == $('.checkbox').length){
+                    $('#select_all').prop('checked',true);
+                }else{
+                    $('#select_all').prop('checked',false);
+                }
+            });
+    }
+
+    // Find and remove selected table rows
+
+    function deleteAllBDB(){
+        console.log('inside')
+        $( "#dialog" ).dialog({
+            position: {
+                 my: "center", at: "center", of: window 
+                }
+        });
+    };
+
+    function deleteBprows(){
+                var ticklist=[];
+                $('#bp_data_table').find('tr').each(function () {
+                    var row = $(this);
+                    if(row.find('input[name="record"]').is(':checked'))
+                    {
+                        ticklist.push($(this.cells[1]).text());
+                    }
+                    
+                });
+                alert(ticklist);
+                $("table tbody").find('input[name="record"]').each(function(){
+                    if($(this).is(":checked")){
+                        $(this).parents("tr").remove();
+                    }
+                    });
+                
+                console.log("send to delete")
+                for(var i=0;i<ticklist.length;i++)
+                {
+                    $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/deleteBp?db_name="+db_name,
+                        type: "POST",
+                        data:{ID:ticklist[i]}
+                    })
+                    .fail(function(){
+                $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+                console.log("error occurred")
+            });
+                   
+                }
+                //window.location.reload();
+                $('#bp_data_table').dataTable().fnClearTable();
+                $('#bp_data_table').dataTable().fnDestroy();
+                create_tab_table('bp_id', 'Best Practice Exceptions');
+                $('#bp_id').click()
+                
+    };
+
+
+    function deleterows(){
+                var ticklist=[];
+                $('#inventory_data_table').find('tr').each(function () {
+                    var row = $(this);
+                    if(row.find('input[name="record"]').is(':checked'))
+                    {
+                        ticklist.push($(this.cells[1]).text());
+                    }
+                    
+                });
+                //alert(ticklist);
+                $("table tbody").find('input[name="record"]').each(function(){
+                    if($(this).is(":checked")){
+                        $(this).parents("tr").remove();
+                    }
+                    });
+                
+                console.log("send to delete")
+                for(var i=0;i<ticklist.length;i++)
+                {
+                    $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/deleteEol?db_name="+db_name,
+                        type: "POST",
+                        data:{ID:ticklist[i]}
+                    })
+                    .fail(function(){
+                $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+                console.log("error occurred")
+            });
+                }
+                //window.location.reload();
+                $('#inventory_data_table').dataTable().fnClearTable();
+                $('#inventory_data_table').dataTable().fnDestroy();
+                create_eol()
+                $('#inv_id').click()
+                
+    };
+
+    function deleteFaultrows(){
+                var ticklist=[];
+                $('#fault_data_table').find('tr').each(function () {
+                    var row = $(this);
+                    if(row.find('input[name="record"]').is(':checked'))
+                    {
+                        ticklist.push($(this.cells[1]).text());
+                    }
+                    
+                });
+                alert(ticklist);
+                $("table tbody").find('input[name="record"]').each(function(){
+                    if($(this).is(":checked")){
+                        $(this).parents("tr").remove();
+                    }
+                    });
+                
+                console.log("send to delete")
+                for(var i=0;i<ticklist.length;i++)
+                {
+                    $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/deleteFault?db_name="+db_name,
+                        type: "POST",
+                        data:{ID:ticklist[i]}
+                    })
+                    .fail(function(){
+                $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+                console.log("error occurred")
+            });
+                }
+                //window.location.reload();
+                $('#fault_data_table').dataTable().fnClearTable();
+                $('#fault_data_table').dataTable().fnDestroy();
+                create_tab_table('fault_id', 'Faults');
+                $('#fault_id').click()
+                
+    };
+
+    function deleteBDBconfirm(){
+                $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/deleteallbdb?db_name="+db_name,
+                        type: "DELETE",
+                        success:function(data){
+                            $.growl({ title: "BDB data deleted", message: "Please upload a new showtech file",location:"tc" });
+                            $( '#dialog' ).dialog('close');
+                            $('#log_id').click();
+                        },
+                        error:function(data){
+                            $( '#dialog' ).dialog('close');
+                            $.growl({ title: "Server error", message: "Please contact technical team",location:"tc" });
+                            return false;
+                        }
+                    });
+                // fetch("http://auditanalysis.cisco.com:8012/deleteallbdb?db_name=" + db_name, {
+                //     method: 'DELETE',
+                // })
+                // .then(res => console.log(res.json()))
+    };
+
+    function deleteBdbrows(){
+                var ticklist=[];
+                var requestdata=[]
+                $('#bdb_data_table').find('tr').each(function () {
+                    var row = $(this);
+                    if(row.find('input[name="record"]').is(':checked'))
+                    {
+                        ticklist.push($(this.cells[1]).text());
+                        requestdata.push($(this.cells[1]).text() + '&'+$(this.cells[2]).text());
+                    }
+                    
+                });
+                alert(ticklist);
+                $("table tbody").find('input[name="record"]').each(function(){
+                    if($(this).is(":checked")){
+                        $(this).parents("tr").remove();
+                    }
+                    });
+                
+                console.log("send to delete")
+                for(var i=0;i<ticklist.length;i++)
+                {
+                    $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/deleteBdb?db_name="+db_name,
+                        type: "POST",
+                        data:{ID:requestdata[i]}
+                    })
+                    .fail(function(){
+                $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+                console.log("error occurred")
+            });
+                }
+                //window.location.reload();
+                // $('#bdb_data_table').dataTable().fnClearTable();
+                // $('#bdb_data_table').dataTable().fnDestroy();
+                // create_tab_table('bdb_data', 'Show Tech Logs')
+                // $('#bdb_data').click()
+                
+    };
+
+    function showall(event){        
+        var tid=event.data.tableid;
+        var co=event.data.code;
+        let data=[] 
+        data.push(tid)
+        data.push(co)
+         if(document.getElementsByClassName("Iframe_modal")[0]!=undefined){
+            
+            let iframe=document.getElementsByClassName("Iframe_modal")[0];
+            iframe.parentNode.removeChild(iframe);
+            document.getElementsByClassName("iframeDisplay_modal")[0].remove();
+            //document.getElementById("ifr").outerHTML = "";
+            
+         }
+
+        
+
+        var x = document.createElement("IFRAME");
+        x.classList.add("Iframe_modal");
+        x.setAttribute("src", "/getallFaultRecommendation?data="+data);
+        var modal_elem=document.createElement("div");
+        modal_elem.classList.add("iframeDisplay_modal")
+        document.body.appendChild(modal_elem);
+        $('.iframeDisplay_modal').dialog({
+            autoOpen: false,
+            modal: true,
+            width: 840,
+            height: 520,
+            show:true
+        });
+        //$(".iframeDisplay").html("");
+        $(".iframeDisplay_modal").html(x);
+        $('.iframeDisplay_modal').dialog('open')
+        
+
+    }
+    
+    function load_home(){
+        console.log('load_home() function called')
+        Bardata();
+        $('#detail_data').show();
+        $("#disp_data").hide();
+        $("#inventory_disp").hide();
+        $("#driver_disp").hide();
+
+        $("#inventory_disp_header").hide();
+        $("#inventory_disp_port_capacity").hide();
+        $("#inventory_disp_eol").hide();
+        $("#disp_log_sec").hide();
+        $("#bdb_data_display").hide();
+        $("#overview_content").show();  
+        //$.getScript("static/js/bar.js")
+    }
+
+
+    function getColor(d){
+        const today = new Date();
+        var diffTime;
+        var diffDays;
+        
+        var LDoSdate = new Date(d);
+        if(today.getTime() > LDoSdate.getTime()) {
+	        console.info(" LDoS reached");
+            return 'red'
+        } 
+        if (today.getTime() < LDoSdate.getTime()) {
+
+            diffTime = Math.abs(LDoSdate - today);
+            diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            console.log(diffDays + " days");
+            if(diffDays <365){
+                return '#fb8b0'
+            }
+        } 
+    }
+        
+                
+    function create_port_capacity(){
+        $("#overview_content").hide(); 
+        $("#disp_data").hide(); 
+        $("#inventory_disp_header").show();
+        $("#inventory_disp_eol").hide();
+        $("#disp_log_sec").hide();
+        $("#bdb_data_display").hide();
+        $("#driver_disp").hide();
+        $("#inventory_disp_port_capacity").show();
+
+
+        
+        $("#port_capacity_table_header").html("Port-Capacity")
+        portparseddata=JSON.parse(portcapacitydata)
+        table_heading =  "<th style='width:5%;'>ID</th>\
+                            <th style='width:25%;'>Domain</th>\
+                            <th style='width:25%;'>DN</th>\
+                            <th style='width:10%;'>Fabric ID</th>\
+                            <th style='width:25%;'>Model</th>\
+                            <th style='width:20%;'>Ports Available</th>"
+                            
+        table_start = "<table id='data_table_capacity' class='table table--striped table--loose table--fixed table--wrapped '>"
+        table_head_start ="<thead>"
+        table_head_end = "</thead>"
+        table_body_start = "<tbody>"
+        table_body_end = "</tbody>"
+        table_end = "</table>"
+        
+        var keys = Object.keys(portparseddata[0]);
+
+        Html=""
+        for(var i=0; i<portparseddata.length;i++){
+        Html=Html+"<tr>"
+            for(var j=0; j<keys.length;j++){
+                
+                Html = Html+ "<td data-id="+portparseddata[i]["ID"]+"__portcap"+" class='editable' data-type='"+keys[j]+"'> "+portparseddata[i][keys[j]]+" </td>"
+                
+                
+                
+            }
+        Html=Html+"</tr>"
+        }
+        table_data = table_start+table_head_start+table_heading+table_head_end+Html+table_end
+        $("#port_capacity_table_container").empty()
+        $("#port_capacity_table_container").append(table_data)
+        $("#data_table_capacity").DataTable()
+    }
+    
+    function deleteBDB(){
+        $.ajax({
+        url : "http://auditanalysis.cisco.com:8012/deletebdb?db_name="+db_name,
+        type : "DELETE",
+        success : function() {
+            $('#log_id').click();
+            $.growl({ title: "BDB data deleted", message: "Please upload new Showtech file",location:"tc" });
+            return false;
+        },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please check the file uploaded",location:"tc" });
+            return false;
+        }
+        });
+    }
+    
+    function create_eol(){
+
+        $("#overview_content").hide(); 
+        $("#disp_data").hide(); 
+        $("#bdb_data_display").hide();
+        $("#inventory_disp_header").show();
+        $("#inventory_disp_port_capacity").hide();
+        $("#disp_log_sec").hide();
+        $("#driver_disp").hide();
+
+        $("#inventory_disp_eol").show();
+       
+
+        $("#table_header_inv").html("Hardware End of Life")
+        $.ajax({
+
+        url : "http://auditanalysis.cisco.com:8012/eoldata?db_name="+db_name,
+        type : "GET",
+
+        success : function(data) {
+            console.log(data)
+            eoldata=data;
+        },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+
+        parseddata=JSON.parse(eoldata)
+        
+        table_heading =  "  <th style='width:5%;'><input type='checkbox' id='select_all' onclick='selectfn()' style='width: 17px;height: 17px;'></th>\
+                            <th style='width:6%;'>ID</th>\
+                            <th style='width:20%;'>Type</th>\
+                            <th style='width:20%;'>Domain</th>\
+                            <th style='width:22%;'>Model</th>\
+                            <th style='width:17%;'>End Of Sale</th>\
+                            <th style='width:16%;'>End Of RFA</th>\
+                            <th style='width:15%;'>LDoS</th>\
+                            <th style='width:20%;'>EoL External</th>"
+//<th style='width:22%;'>EOL Bulletin</th>"
+        
+        var keys = Object.keys(parseddata[0]); 
+        
+        table_start = "<div class='deletebuttondiv'><button type='button' style='float:right;margin-right:15px' onclick='deleterows()' class='deleterows'>Delete</button></div><table id='inventory_data_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+        table_head_start ="<thead>"
+        table_head_end = "</thead>"
+        table_body_start = "<tbody id='tbod'>"
+        table_body_end = "</tbody>"
+        table_end = "</table>"
+        Html=""
+        for(var i=0; i<parseddata.length;i++){
+        Html=Html+"<tr class='trow'><td style='vertical-align:top;'><input type='checkbox' class='checkbox' name='record' value=''/></td>"
+            for(var j=0; j<keys.length;j++){
+
+                if (keys[j]=='LDoS'){
+                    if(parseddata[i][keys[j]]==null){
+                        col = 'black'
+                                
+                    } 
+                    else{
+                        col= getColor(parseddata[i][keys[j]])
+                    }
+                    Html = Html+ "<div style='display:flex; align-items:stretch;'><td style='word-wrap: break-word; vertical-align: top;' data-id="+parseddata[i]["ID"]+"__eol"+" class='editable' data-type='"+keys[j]+"'><span style='font-weight:700 ;color:"+col+ "'>" +parseddata[i][keys[j]]+ "</span></td></div>"
+
+                }
+                if(keys[j]!='LDoS'){
+                Html = Html+ "<div style='display:flex; align-items:stretch;'><td style='word-wrap: break-word; vertical-align: top;' data-id="+parseddata[i]["ID"]+"__eol"+" class='editable' data-type='"+keys[j]+"'><span>" +parseddata[i][keys[j]]+ "</span></td></div>"
+                }
+            }          
+        }
+
+        Html=Html+"</tr>"
+        
+        table_data = table_start+table_head_start+table_heading+table_head_end+table_body_start+Html+table_body_end+table_end
+        $("#inventory_table_container").empty()
+        $("#inventory_table_container").append(table_data)
+        $("#inventory_data_table").DataTable()  
+    }
+
+    function reportgen(){
+        $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/getfeedback?cust_name="+cust_name+"&pid={{pid}}&uid={{uid}}",
+            type : "get",
+            async:false,
+            success : function(data) {
+                dt=JSON.parse(data)
+                console.log(dt.length)
+                if(dt.length){
+                    // reportfunc();
+                    document.location.href="http://auditanalysis.cisco.com:8012/gen_report?db_name="+db_name+"&cust_name="+cust_name+"&username="+username;
+                
+                }
+                else{
+                    $('#feedback').fadeIn();
+                }
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+        });
+    }
+
+    function create_tab_table(id, display_data){
+        
+        $("#table_header").html(display_data)
+        if(id=='fault_id'){
+            $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/faultdata?db_name="+db_name,
+            type : "GET",
+            async:false,
+            success : function(data) {
+                fault_data=data;
+            },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+            });
+        }
+
+        if(id=='bdb_data'){
+            $.ajax({
+                url : "http://auditanalysis.cisco.com:8012/bdbdata?db_name="+db_name,
+                type : "GET",
+                async:false,
+                success : function(data) {
+                    bdbdata=data;
+                },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+            });
+        }
+        
+        if(id=='bp_id'){
+            $.ajax({
+                url : "http://auditanalysis.cisco.com:8012/bpdata?db_name="+db_name,
+                type : "get",
+                async:false,
+                success : function(data) {
+                    bp_data=data;
+                },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+            });
+        }
+
+        if((id=='bp_id' && bp_data=="null") || (id=='fault_id' && fault_data=="null")){
+                $.growl({ title: "No data for this tab", message: "Please check the file uploaded",location:"tc" });
+                return false;
+        }
+
+        if(id=='bp_id' && bp_data=='[{}]'){
+            $.growl({ title: "No BP data in DCAF file", message: "Please check the file uploaded",location:"tc" });
+            return false;
+        }
+
+        if(id=='fault_id' && fault_data=="[{}]"){
+            $.growl({ title: "No Faults in last 6 months", message: "Please check the file uploaded",location:"tc" });
+            return false;
+        }
+
+        if(id=='bdb_data' && (bdbdata=="null" || bdbdata=='[]')){
+            $.growl({ title: "File not uploaded", message: "Please upload the file first",location:"tc" });
+            $('#log_id').click();
+            return false;
+        }
+        
+        $("#overview_content").hide();
+        $("#inventory_disp").hide();
+        $("#port_capacity_disp").hide();
+
+        $("#inventory_disp_header").hide();
+        $("#inventory_disp_port_capacity").hide();
+        $("#inventory_disp_eol").hide();
+        $("#disp_log_sec").hide();
+        $("#driver_disp").hide();
+        $("#disp_data").show();
+
+        if(id=='bp_id'){
+
+            parseddata = JSON.parse(bp_data)
+            table_start = "<div class='deletebuttondiv'><button type='button' style='float:right;margin-right:15px' onclick='deleteBprows()' class='deleteBprows'>Delete</button></div><table id='bp_data_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+            table_heading =  "<th style='width:5%;'><input type='checkbox' id='select_all' onclick='selectfn()' style='width:17px; height:17px;'/></th>\
+                            <th style='width:7%;'>ID</th>\
+                            <th style='width:15%;'>Domain</th>\
+                            <th style='width:13%;'>Risk</th>\
+                            <th style='width:19%;'>Observation</th>\
+                            <th style='width:25%;'>Description</th>\
+                            <th style='width:26%;'>Recommendation</th>"
+        }
+        
+        if(id=='fault_id'){
+            parseddata = JSON.parse(fault_data)
+            table_start = "<div class='deletebuttondiv'><button type='button' style='float:right;margin-right:15px' onclick='deleteFaultrows()'>Delete</button></div><div class='iframeDisplay' id='ifr'></div><table id='fault_data_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+            table_heading =  "<th style='width:6%;'><input type='checkbox' id='select_all' onclick='selectfn()' style='width: 17px;height: 17px;'/></th>\
+                            <th style='width:8%;'>ID</th>\
+                            <th style='width:15%;'>Domain</th>\
+                            <th style='width:13%;'>Severity</th>\
+                            <th style='width:10%;'>Code</th>\
+                            <th style='width:36%;'>Description</th>\
+                            <th style='width:17%;'>Time Stamp</th>\
+                            <th style='width:12%;'>Frequency</th>\
+                            <th style='width:35%;' class='rec_col'>Recommendation</th>"
+            }
+        if(id=='bdb_data'){
+            
+            parseddata = JSON.parse(bdbdata)
+            table_start = "<div class='deletebuttondiv'><button type='button' style='float:right;margin-right:15px' onclick='deleteAllBDB()' class='deleteAllBDB'>Delete All</button><button type='button' style='float:right;margin-right:15px' onclick='deleteBdbrows()' class='deleteBdbrows'>Delete</button><button type='button' style='float:right;margin-right:15px' class='addBDBdata' onclick='$(\"#log_id\").click();'>Upload data</button></div><div class='iframeDisplay'></div><table id='bdb_data_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+            table_heading =  "<th style='width:5%;'><input type='checkbox' id='select_all' onclick='selectfn()' style='width: 17px;height: 17px;'/></th>\
+                            <th style='width:5%;'>ID</th>\
+                            <th style='width:11%;'>Domain</th>\
+                            <th style='width:12%;'>Severity</th>\
+                            <th style='width:15%;'>Heading</th>\
+                            <th style='width:17%;'>Description</th>\
+                            <th style='width:19%;'>Evidence</th>\
+                            <th style='width:16%;' class='rec_col'>Recommendation</th>"
+
+        }
+        // $(function() {
+        //     jQuery.each($("#bdb_data_table tr"), function() {
+        //     $(this).children(":eq(7)").after($(this).children(":eq(6)"));
+        //     });
+
+
+        // });
+
+        
+        table_head_start ="<thead>"
+        table_head_end = "</thead>"
+        table_body_start = "<tbody>"
+        table_body_end = "</tbody>"
+        table_end = "</table>"
+        
+        var keys = Object.keys(parseddata[0]); 
+        let col='black'
+        Html=""
+        for(var i=0; i<parseddata.length;i++){
+        Html=Html+"<tr><td style='vertical-align:top;'><input type='checkbox' class='checkbox' name='record' value=''/></td>"
+            for(var j=0; j<keys.length;j++){
+                if(keys[j]=='Severity'){
+                    if(parseddata[i][keys[j]].toLowerCase().replaceAll(" ",'')=='needtofillbynce' ){
+                        col="black"
+                        bcol="transparent"
+                        parseddata[i][keys[j]]="Need to fill by NCE"
+                    }
+                    else if(parseddata[i][keys[j]].toLowerCase().replaceAll(" ",'')=='medium'){
+                        bcol='#1e4471'
+                        col="white"
+                        parseddata[i][keys[j]]="Medium"
+                    }
+                    else if(parseddata[i][keys[j]].toLowerCase().replaceAll(" ",'')=='high'){
+                        bcol='#00bceb'
+                        col="white"
+                        parseddata[i][keys[j]]="High"
+                    }
+                    else if(parseddata[i][keys[j]].toLowerCase().replaceAll(" ",'')=='low'){
+                        bcol='#6abf4b'
+                        col="black"
+                        parseddata[i][keys[j]]="Low"
+                    }
+                    else if(parseddata[i][keys[j]].toLowerCase().replaceAll("-",'').replaceAll(" ",'')=='infoonly'){
+                        bcol='#eed202'
+                        col="black"
+                        parseddata[i][keys[j]]="Info-only"
+                    }
+                    Html = Html+ "<div style='display:flex; align-items:stretch;'><td style='word-wrap: break-word;  text-align:left; vertical-align:top;' data-id="+parseddata[i]["ID"]+"__"+id+" class='editable'  data-type='"+keys[j]+"'><span class='severity_text' style='color:"+col+";background-color:"+bcol+"'> "+parseddata[i][keys[j]]+"</span> </td></div>"    
+                }
+                else if(keys[j]=='Recommendation'  || keys[j]=='Evidence'){
+                    col='black'
+                    Html = Html+ "<div style='display:flex; align-items:stretch;'><td style='word-wrap: break-word; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; vertical-align:top; ' data-id="+parseddata[i]["ID"]+"__"+id+" class='editable'  data-type='"+keys[j]+"'> "+parseddata[i][keys[j]]+" </td></div>"
+                }
+                else{
+                        col='black'
+                        Html = Html+ "<div style='display:flex; align-items:stretch;'><td style='word-wrap: break-word; vertical-align:top; ' data-id="+parseddata[i]["ID"]+"__"+id+" class='editable'  data-type='"+keys[j]+"'> "+parseddata[i][keys[j]]+" </td></div>"
+                    }
+                
+            }
+        Html=Html+"</tr>"
+        }
+        
+        console.log("value of Html becomes: " + Html)
+        table_data = table_start+table_head_start+table_heading+table_head_end+Html+table_end
+        
+            
+        $("#table_container").empty()
+        $("#table_container").append(table_data)
+        $("#bp_data_table").DataTable();
+        $("#fault_data_table").DataTable();
+        $("#bdb_data_table").DataTable();
+    }
+    function create_table(id, display_data){
+        $('#detail_data').show();
+        
+        if(id=="insight"){$('#detail_data').hide();}
+        
+        console.log('received id is:'+id+' and received type is: '+display_data)
+        d = JSON.parse(stats)[0]
+        //["domain", "FI", "Chassis", "B_Server", "Service_profile"]
+        table_start = "<table id='stats_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+        table_head_start ="<thead>"
+        table_head_end = "</thead>"
+        table_body_start = "<tbody>"
+        table_body_end = "</tbody>"
+        table_end = "</table>"   
+        $("#summ_header").html(display_data)
+                
+        if (id=='domain1'){
+            table_heading = "<th>Domain</th>"
+            Html=""
+
+            for(var i=0; i<d['domain'].length;i++){
+                Html = Html+ "<tr><td> "+d['domain'][i]+" </td></tr>"
+            }
+        }
+        
+        // for all other field except "domain"
+        else{
+            var keys = [];
+
+            console.log("received id: "+ id);
+            for(var k in d[id]){
+                keys.push(k);
+            }
+            console.log("keys fetched from "+ id+ " and the keys are "+  keys + "length of keys are: "+ keys.length)
+
+            table_heading=""
+            for (var i=0; i<keys.length;i++){
+                table_heading = table_heading+"<th>"+keys[i]+"</th>"
+                //console.log("table heading becomes: "+table_heading)
+
+            }
+            //console.log("value of d[id][keys[0]].length is: "+ d[id][keys[0]].length)
+            Html=""
+            for(var i=0; i<d[id][keys[0]].length;i++){
+                Html=Html+"<tr>"
+                for(var j=0; j<keys.length;j++){
+                    Html = Html+ "<td> "+d[id][keys[j]][i]+" </td>"
+                    //console.log("(i,j) : ("+ i+","+j+")")
+                }
+                Html=Html+"</tr>"
+            }
+            //console.log("value of Html becomes: " + Html)
+
+        }
+
+        table_data = table_start+table_head_start+table_heading+table_head_end+Html+table_end
+        $("#stats_container").empty()
+        $("#stats_container").append(table_data)
+
+    }
+
+    function showtechsubmit(){
+        let fileInput=document.getElementById('showtechFile')
+        let files=[]
+
+        if(fileInput.files.length==0){
+            $.growl({ title: "File Error", message: "Please select again",location:"tc" })
+        }
+        else{
+            $("body").addClass("loading");
+            $.growl({ title: "File Uploading", message: "Please allow upto 10 minutes",location:"tc" });
+        }
+
+        for(let i=0;i<fileInput.files.length;i++){
+            data=new FormData();
+            data.append('file',fileInput.files[i])
+            setTimeout(function () {
+                $.ajax({
+                url : "http://10.127.250.102:8010/bdb?db_name="+db_name+"&custname="+cust_name+"&val="+tkn,
+                type : "POST",
+                async:false,
+                data:data,
+                contentType:false,
+                processData:false,
+                success : function(data) {
+                    //$('.file_'+i).val('uploaded')
+                    if(data=='1'){
+                     $("body").removeClass("loading"); 
+                     $.growl({ title: "Filename Error", message: "Please remove special characters",location:"tc" });
+                    }
+                    else{
+                    if(i==(fileInput.files.length-1)){
+                        $("body").removeClass("loading"); 
+                        $('#bdb_data').click();
+                    }}
+                },
+                error:function(error){
+                    $("body").removeClass("loading"); 
+                    $.growl({ title: "Service Error", message: "Please contact technical team",location:"tc" });
+                    }
+                });
+            },100);
+        }
+        
+    }
+
+    function getServerData(){
+        
+        if(!$('#server-data-form').valid()){
+            return false;
+        }
+        $("#ServerDataTableSection").empty();
+        $('.servertablediv').show();
+        $('#datacontainer').hide();
+        $("body").addClass("loading"); 
+        if($('#ucsm_ver').val()=='0' || $('#os').val()=='0' || $('#os_ver').val()=='0'){
+
+        }
+        setTimeout(function () {
+            $.ajax({
+            url : "http://auditanalysis.cisco.com:8012/serverData?db_name="+db_name,
+            type : "POST",
+            data:{'OSm':$('#os :selected').text(), OSVersion:$('#os_ver :selected').text(),UCSM:$('#ucsm_ver').val()},
+            // data:{OS:$('#os').val(), OSVersion:$('#os_ver :selected').text(),'OSVersion_id': $('#os_ver').val(),UCSM:$('#ucsm_ver').val()},
+            success : function(data,xhr) {
+                if(xhr=='nocontent'){
+                    $("body").removeClass("loading");
+                    $.growl({ title: "No data", message: "This above combination is not supported.",location:"tc" }); 
+                    // $.growl({ title: "No data", message: "Thie above combination is not supported. Please enter the correct combination or check on https://ucshcltool.cloudapps.cisco.com/ tool.",location:"tc" });
+                    return false;
+                }
+                console.log(data)
+                serverdata=JSON.parse(data)
+                $('#datacontainer').show();
+                summary_parsed_data=JSON.parse(in_summary)
+                $("body").removeClass("loading"); 
+                table_heading =  "<th>Domain</th>\
+                                <th>Server Model</th>\
+                                <th>VIC</th>\
+                                <th>Recommended ENIC</th>\
+                                <th>Recommended FNIC</th>"
+                                
+                table_start = "<table id='summary_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+                table_head_start ="<thead>"
+                table_head_end = "</thead>"
+                table_body_start = "<tbody>"
+                table_body_end = "</tbody>"
+                table_end = "</table>"
+                
+                var keys = Object.keys(serverdata[0]);
+
+                Html=""
+                for(var i=0; i<serverdata.length;i++){
+                Html=Html+"<tr>"
+                for(var j=0; j<keys.length;j++){
+                    
+                    Html = Html+ "<td> "+serverdata[i][keys[j]]+" </td>"
+                }
+                Html=Html+"</tr>"
+                }
+                
+                table_data = table_start+table_head_start+table_heading+table_head_end+Html+table_end
+                $("#ServerDataTableSection").empty()
+                $("#ServerDataTableSection").append(table_data)
+                $("#summary_table").DataTable();
+                $('#summary_table_wrapper #summary_table_paginate').css('display','none');
+                $('#summary_table_wrapper #summary_table_filter').css('display','none');
+                $('#summary_table_wrapper #summary_table_length').css('display','none');
+                // $('#os_text').text($('#os').val())
+                $('#os_text').text($('#os :selected').text())
+                $('#os_version_text').text($('#os_ver :selected').text())
+                $('#ucsm_text').text($('#ucsm_ver').val())
+                // $('#os_ver')
+                //             .find('option')
+                //             .remove().end().append('<option value="0">Select</option>');
+                // $('#os').val('');
+                //  $('#UCSM_text').val('');
+                // $('#ucsm_ver')
+                //             .find('option')
+                //             .remove().end().append('<option value="0">Select</option>');
+                
+                
+                // document.getElementById('generate_report_link').href="http://auditanalysis.cisco.com:8012/gen_report?db_name="+db_name+"&cust_name="+cust_name;
+            },
+            error:function(error){
+                $("body").removeClass("loading"); 
+                $.growl({ title: "Service Error", message: "Please check the data entered",location:"tc" });
+            }
+        });
+    },100);
+    }
+
+    function getOSversions(){
+        $("body").addClass("loading"); 
+        // let selectedOS=document.getElementById('os').value
+        let selectedOS=document.getElementById('os').value.split(',')[0]
+        if(selectedOS!='0'){
+            $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/GetOSVersionList?db_name="+db_name,
+                        type: "POST",
+                        data:{OS:selectedOS},
+                        success : function(data) {
+                            OSVersions=JSON.parse(data)
+                            $('#os_ver')
+                            .find('option')
+                            .remove().end().append('<option value="0">Select</option>');
+                            $.each(OSVersions, function (index, value) {
+                                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                                // $('#os_ver').append('<option value="' + value.ID + '">' + value.OSVERSION + '</option>');
+                                $('#os_ver').append('<option value="' + [value.T_ID,value.ID] + '">' + value.OSVERSION + '</option>');
+                                $("body").removeClass("loading"); 
+                            });
+                        },
+                        error:function(error){
+                            $("body").removeClass("loading"); 
+                            $.growl({ title: "No data", message: "Please try another OS",location:"tc" });
+                        }
+                    })
+        }
+    }
+
+    function getUCSMversions(){
+        $("body").addClass("loading");        
+        let OSV=document.getElementById('os_ver').value.split(',')[0]
+        let selectedOSV=document.getElementById('os_ver').value.split(',')[1]
+        let selectedOS=document.getElementById('os').value.split(',')[1]
+        // let selectedOSV=document.getElementById('os_ver').value
+        // let selectedOS=document.getElementById('os').value
+        if(selectedOSV!='0'){
+            $.ajax({
+                        url: "http://auditanalysis.cisco.com:8012/GetUCSMVersionList?db_name="+db_name,
+                        type: "POST",
+                        data:{OS:selectedOS,OSVersion_id:selectedOSV,OSV_id:OSV,'OSm':$('#os :selected').text(), OSVersion:$('#os_ver :selected').text()},
+                        // data:{OS:selectedOS,OSVersion_id:selectedOSV},
+                        success : function(data) {
+                            UCSMVersions=JSON.parse(data)
+                            $('#ucsm_ver')
+                            .find('option')
+                            .remove().end().append('<option value="0">Select</option>');
+                            $.each(UCSMVersions, function (index, value) {
+                                // APPEND OR INSERT DATA TO SELECT ELEMENT.
+                                // $('#ucsm_ver').append('<option value="' + value.Version + '">' + value.Version + '</option>');
+                                $('#ucsm_ver').append('<option value="' + value + '">' + value + '</option>');
+                                $("body").removeClass("loading"); 
+                            });
+                        },
+                        error:function(error){
+                            $("body").removeClass("loading"); 
+                            $.growl({ title: "No data", message: "Please try another OS Version.",location:"tc" });
+                        }
+                    })
+        }
+    }
+    
+    function Export2Word( filename = ''){
+        var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body><table>";
+        var postHtml = "</body></html></table>";
+        var html = preHtml+document.getElementById('insightSummary').innerHTML+postHtml;
+
+        var blob = new Blob(['\ufeff', html], {
+            type: 'application/msword'
+        });
+        
+        // Specify link url
+        var url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+        
+        // Specify file name
+        filename = filename?filename+'.doc':'document.doc';
+        
+        // Create download link element
+        var downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob ){
+            navigator.msSaveOrOpenBlob(blob, filename);
+        }
+        else{
+            // Create a link to the file
+            downloadLink.href = url;
+            
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
+        }
+        
+        document.body.removeChild(downloadLink);
+    }
+
+    function load_log(){
+        $("#overview_content").hide();
+        $("#inventory_disp").hide(); 
+        $("#port_capacity_disp").hide();
+        $("#disp_data").hide();
+        $("#inventory_disp_header").hide();
+        $("#inventory_disp_port_capacity").hide();
+        $("#inventory_disp_eol").hide();
+        $("#bdb_data_display").hide();
+        $("#driver_disp").hide();
+        $("#disp_log_sec").show(); 
+    } 
+
+    function adapter(){
+        if(bdbdata=="null" || bdbdata=='[]'){
+            $.growl({ title: "File not uploaded", message: "Please upload show-tech file first",location:"tc" });
+            $('#log_id').click();
+            return false;
+        }
+
+        $("#overview_content").hide();
+        $("#inventory_disp").hide(); 
+        $("#port_capacity_disp").hide();
+        $("#disp_data").hide();
+        $("#inventory_disp_header").hide();
+        $("#inventory_disp_port_capacity").hide();
+        $("#inventory_disp_eol").hide();
+        $("#bdb_data_display").hide();
+        $("#disp_log_sec").hide();
+        $("#driver_disp").show(); 
+        $.ajax({
+url : "http://auditanalysis.cisco.com:8012/fcdata?db_name="+db_name,
+type : "GET",
+
+success : function(data) {
+    //console.log(data)
+    fcdata=data;
+    serverdata1=JSON.parse(fcdata)
+    if(serverdata1!=null){
+        $('#datacontainer').show();
+        $('.servertablediv').show();
+    }
+        table_heading =  "<th>Domain</th>\
+                                <th>Server Model</th>\
+                                <th>VIC</th>\
+                                <th>Recommended ENIC</th>\
+                                <th>Recommended FNIC</th>"
+                                
+                table_start = "<table id='summary_table' class='table table--striped table--loose table--fixed table--wrapped '>"
+                table_head_start ="<thead>"
+                table_head_end = "</thead>"
+                table_body_start = "<tbody>"
+                table_body_end = "</tbody>"
+                table_end = "</table>"
+                
+                var keys = Object.keys(serverdata1[1]);
+
+                Html=""
+                for(var i=1; i<serverdata1.length;i++){
+                Html=Html+"<tr>"
+                for(var j=0; j<keys.length;j++){
+                    Html = Html+ "<td> "+serverdata1[i][keys[j]]+" </td>"
+                }
+                Html=Html+"</tr>"
+                }
+                
+                table_data = table_start+table_head_start+table_heading+table_head_end+Html+table_end
+                $("#ServerDataTableSection").empty()
+                $("#ServerDataTableSection").append(table_data)
+                $("#summary_table").DataTable();
+                $('#summary_table_wrapper #summary_table_paginate').css('display','none');
+                $('#summary_table_wrapper #summary_table_filter').css('display','none');
+                $('#summary_table_wrapper #summary_table_length').css('display','none');
+                $('#os_text').text(serverdata1[0]['OS'])
+                $('#os_version_text').text(serverdata1[0]['OS_Version'])
+                $('#ucsm_text').text(serverdata1[0]['UCSM'])
+                $('#os_ver')
+                            .find('option')
+                            .remove().end().append('<option value="0">Select</option>');
+                $('#os').val('');
+                // $('#UCSM_text').val('');
+                $('#ucsm_ver')
+                            .find('option')
+                            .remove().end().append('<option value="0">Select</option>');
+                
+    },
+        error:function(error){
+            $.growl({ title: "Server Error", message: "Please try again later",location:"tc" });
+            return false;
+        }
+});
+        
+
+    }
+
+    function genPPT(){
+        var pptx=new PptxGenJS(); 
+        pptx.tableToSlides('overview_content');
+        pptx.addSlide('image_check'); 
+
+        pptx.writeFile();
+    }
+         
+
+    
+</script>
+
+</head>
+<header class="header">
+    
+            <div class="container">
+                <div class="header-panels">
+                    <div class="header-panel">
+                        <a class="header__logo" href="http://www.cisco.com" target="_blank">
+                            <span class="icon-cisco"></span>
+                                </a>
+                        <div class="header__title">UCS Audit Dashboard</div>
+                    </div>
+                    <div class="header-panel--right">
+                        <label>Hi {{username}}, You are presently working on {{customer_name}}/{{pid}}/{{uid}}</label>
+                    </div>
+        </div>
+    </div>
+</header>
+</br>
+</br>
+<body class="cui">
+<!-- <div class="panel panel--loose panel--secondary dbl-padding">
+    <div class="row">
+        <div class="col-md-2"></div> 
+        <div class="col-md-8">
+            h4 class="no-margin">Welcome to</h4
+            <h4 class="display-0">
+                <span>UCS <span class="text-primary">Audit Dashboard</span></span>
+            </h4>
+            
+        </div>
+        <div class="col-md-2">
+            <img src="static/img/iheartcisco.png">
+        </div>
+    </div>
+</div> -->
+
+</br>
+</br>
+</br>
+
+<div class="row">
+<!-- <div class="col-2"> -->
+    
+    <!-- <div class="row"> -->
+    <!-- <div class="col-10"> -->
+        <div class="area"></div>
+        <nav class="main-menu" style="padding-top: 70px;position:fixed">
+            <ul style="padding-left: 0px;">
+                <li>
+                    <a tabindex="0">
+                        <i class="fa fa-home fa-2x" style="color: #999;"></i>
+                        <span id ="home_id" class="nav-text" style="color: #e2e2e2;" onclick="load_home()">
+                            Home
+                        </span>
+                    </a>
+                  
+                </li>
+                <li class="has-subnav">
+                    <a tabindex="0">
+                        <i class="fa fa-folder-open fa-2x" style="color: #999;"></i>
+                        <span id = "inv_id" class="nav-text" style="color: #e2e2e2;" onclick="create_eol()">
+                            Inventory
+                        </span>
+                    </a>
+                    
+                </li>
+                <li class="has-subnav">
+                    <a tabindex="0">
+                       <i class="fa fa-exclamation-circle fa-2x" style="color: #999;"></i>
+                        <span id ="fault_id" class="nav-text" style="color: #e2e2e2;" onclick="create_tab_table(this.id, 'Faults')">
+                            Faults
+                        </span>
+                    </a>
+                    
+                </li>
+                <li class="has-subnav" style="display: none;">
+                    <a tabindex="0">
+                       <i class="fa fa-bar-chart-o fa-2x" style="color: #999;"></i>
+                        <span id ="log_id" class="nav-text" style="color: #e2e2e2;" onclick="load_log()">
+                            Show Tech Analysis
+                        </span>
+                    </a>
+                   
+                </li>
+                <li>
+                    <a tabindex="0">
+                        <i class="fa fa-book fa-2x" style="color: #999;"></i>
+                        <span id ="bdb_data" class="nav-text" style="color: #e2e2e2;" onclick="create_tab_table(this.id, 'Show Tech Logs')">
+                            Log Analysis
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a tabindex="0">
+                        <i class="fa fa-check-square-o fa-2x" style="color: #999;"></i>
+                        <span id ="bp_id" class="nav-text" style="color: #e2e2e2;" onclick="create_tab_table(this.id, 'Best Practice Exceptions')">
+                           Best Practices
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a id="generate_form" target="_blank">
+                        <i class="fa fa-download fa-2x" style="color: #999;"></i>
+                        <span class="nav-text" style="color: #e2e2e2;"onclick="reportgen()">
+                            Generate Report
+                        </span>
+                    </a>
+                </li>
+                <!-- <li>
+                    <a href="#">
+                         <i class="fa fa-download fa-2x" style="color: #999;"></i>
+                         <span class="nav-text" style="color: #e2e2e2;" onclick="genPPT()">
+                             Generate PPT
+                         </span>
+                     </a>
+                 </li> -->
+                 
+            </ul>
+
+            <ul class="logout" style="padding-left: 0px;">
+                <li>
+                   <a href="http://auditanalysis.cisco.com">
+                         <i class="fa fa-power-off fa-2x" style="color: #999;"></i>
+                        <span class="nav-text" style="color: #e2e2e2;">
+                            Logout
+                        </span>
+                    </a>
+                </li>  
+            </ul>
+        </nav>
+        <div id='feedback'><div class='x'></div><br>
+<!-- <h3 style="text-align:center;">Feedback Form</h3><br> -->
+<form>
+<input type="text" class='input_text' id="fhrs" placeholder="Enter no: of hours saved*" name="hours" onkeyup="isEmpty()"><br><br>
+<textarea class='input_text' id="ftxt" placeholder="Provide Detailed Feedback*" rows="10" onkeyup="isEmpty()"></textarea><br><br>
+<!-- <a href="#" id="generate_report_link">Submit</a> -->
+<button type="button" id='generate_report_link' onclick='reportfunc()' disabled>Download Report</button></form></div>
+        <!-- <nav class="sidebar sidebar--medium" role="navigation">
+            <div class="sidebar__header">
+                <a href="javascript:;">
+                    <span class="icon-toggle-menu"></span>
+                </a>
+                <div class="sidebar__header-title">Title Area</div>
+            </div>
+            <ul>
+                <li class="sidebar__item">
+                    <a tabindex="0">
+                        
+                    </a>
+                       <li><a tabindex="0"><span id ="home_id"  class="text-size-20" onclick="load_home()"><strong>Home</strong></span></a></li>
+                       <li><a tabindex="0"><span id = "inv_id" class="text-size-20" onclick="create_eol()"><strong>Inventory</strong></span></a></li>
+                       
+                       <li><a tabindex="0"><span id ="fault_id" class="text-size-20" onclick="create_tab_table(this.id, 'Faults')"><strong>Fault</strong></span></a></li>
+                       <li><a tabindex="0"><span id ="log_id" class="text-size-20" onclick="load_log()"><strong>Show Tech Anlaysis</strong></span></a></li>
+                       <li><a tabindex="0"><span id ="bdb_data" class="text-size-20" onclick="create_tab_table(this.id, 'Show Tech Logs')"><strong>Log Anlaysis</strong></span></a></li>
+
+                       <li><a tabindex="0"><span id ="bp_id" class="text-size-20" onclick="create_tab_table(this.id, 'Best Practice Exceptions')"><strong>Best Practices</strong> </span></a></li>
+                       
+                       <li><A HREF="javascript:history.go(0)" class="text-size-20"><strong>Save Changes</strong></A></li>
+                       <li><a href="/gen_report" class="text-size-20"><strong>Generate Report</strong></a></li>
+
+                </li>
+            </ul>
+        </nav> -->
+    <!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
+
+<!-- <button
+  onclick="{ var pptx=new PptxGenJS(); pptx.tableToSlides('overview_content'); pptx.addSlide('image_check'); pptx.writeFile(); }"
+  type="button"
+>
+  Export to PPTX
+</button> -->
+
+<div id ='driver_disp' style="display:none;">
+    <div class="row">
+        <div class="col-12 base-margin-bottom" style="text-align: center ;">
+            <ul id="embossed" class="tabs tabs--embossed">
+                <li id="embossed-1" class="text-size-18 tab " onclick="create_eol()">
+                    <a tabindex="0"><strong>End of Life</strong></a>
+                </li>
+                <li id="embossed-2" class="text-size-18 tab" onclick="adapter()">
+                    <a tabindex="0"><strong>Firmware Compatibility</strong></a>
+                </li>
+                <li id="embossed-3" class="text-size-18 tab" onclick="create_port_capacity()">
+                    <a tabindex="0"><strong>Port-Capacity</strong> </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        <div class="section" style="padding-left: 100px;">
+            <div class="toast" style="background-color:#FFFFFF;">
+                <div class="toast__body">
+                    <div class="toast__title">ENTER DETAILS</div><br>
+
+                    <div class="form-group base-margin-bottom">
+                        <div class="form-group__text">
+                            <form id="server-data-form">
+                                <div class="row">
+                                    <div class="col-3 dropdown-fields">
+                                        <label><strong> Operating System</strong>: 
+                                            <br>
+                                            <select name="os" id="os" onchange="getOSversions()" required class="col-12">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="col-3 dropdown-fields">
+                                        <label><strong>Operating System Version</strong>: 
+                                            <br>
+                                            <select name="os_ver" id="os_ver" onchange="getUCSMversions()" required class="col-12">
+                                                <option value="">Select</option>
+                                            </select>
+                                         </label>
+                                    </div>
+                                    <div class="col-3 dropdown-fields">
+                                        <label><strong>UCSM Version</strong>: 
+                                            <br>
+                                            <select name="ucsm_ver" id="ucsm_ver" required class="col-12">
+                                                <option value="">Select</option>
+                                            </select>
+                                         </label>
+                                    </div>
+                                    <div class="col-3">
+                                        <input class="submitButton" type="button" value="Submit" onclick="getServerData()">
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="datacontainer" style="margin-top: 10px;font-weight: 550;">
+                <div class="panel panel--primary">
+                    <div class="row">
+                        <div class="col-3">
+                            <strong> ENIC/FNIC DATA</strong>
+                        </div>
+                        <div class="col-3">
+                            OS : <span id='os_text'></span>
+                        </div>
+                        <div class="col-3">
+                            OS Version : <span id='os_version_text'></span>
+                        </div>
+                        <div class="col-3">
+                            UCSM : <span id='ucsm_text'></span>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="panel panel--bordered panel--raised panel--loose servertablediv">
+                    <div class="row" style= "overflow:auto;" id="ServerDataTableSection"display:table>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info">
+                <p>
+                    Compare the Recommended FNIC/ ENIC versions with the one given by the customer for each combination:<br>
+                    ⁃ If the customer is running the recommended FNIC/ENIC versions, there is no action needed.<br>
+                    ⁃ If the customer is running the FNIC ENIC which is lower than the recommended versions, then there is a need to upgrade to the latest versions.
+                </p>
+            </div>
+        </div>
+        
+        
+    </div>
+    
+
+</div>
+
+<div class="overlay"></div>
+            
+            </div>
+
+<div id="disp_log_sec" style="display:none;">
+
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-10">
+        
+            <div class="section">
+                <div class="toast" style="background-color:#FFFFFF;">
+                    <div class="toast__body">
+                        <div class="toast__title">ENTER DETAILS</div><br>
+
+                        <div class="form-group base-margin-bottom">
+                            <div class="form-group__text">
+
+                                <form id="showtechform">
+                                    <!-- <label>Email: <input name="email" style="width: 200px;" required/></label>
+                                    <br>
+                                    <br>
+                                    <label>Password: <input type= "password" name="passw" required style="width: 200px;"/></label>
+                                    <br>
+                                    <br> -->
+                                    <label>File: <input name="file" id="showtechFile" type="file" accept='.tar' style="width: 250px;" required/></label>
+                                    <br>
+                                    <br>
+                                    <!-- <label>Task Name: <input name="task"></label> -->
+                                    <input class="showtechsubmit" type="button" value="Submit" onclick="showtechsubmit()" style="width: 100px;">
+                                <br>
+                                        
+                                </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="overlayshowtech"></div>
+            
+                                </div>
+
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div id="dialog" title="Confirmation" style="display: none;">
+    <div>
+        Are you sure you want to delete all Log Analysis Data?
+    </div>
+    <div>
+        <input type="button" value="Yes" onclick="deleteBDBconfirm()" class="deleteBDBconfirm"/>
+        <input type="button" value="No" onclick="$( '#dialog' ).dialog('close');"/>
+    </div>
+</div>
+<div id="UploadedFilesdialog" title="Uploaded Files" style="display: none;">
+    <div>
+        Uploading files :
+    </div>
+    <div id='fileslist'>
+        
+    </div>
+</div>
+<div id="inventory_disp_header" style="display:none;">
+    <div class="row">
+        <div class="col-12 base-margin-bottom" style="text-align: center ;">
+            <ul id="embossed" class="tabs tabs--embossed">
+                <li id="embossed-1" class="text-size-18 tab " onclick="create_eol()">
+                    <a tabindex="0"><strong>End of Life</strong></a>
+                </li>
+                <li id="embossed-2" class="text-size-18 tab" onclick="adapter()">
+                    <a tabindex="0"><strong>Firmware Compatibility</strong></a>
+                </li>
+                <li id="embossed-3" class="text-size-18 tab" onclick="create_port_capacity()">
+                    <a tabindex="0"><strong>Port-Capacity</strong> </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="inventory_disp_port_capacity" style="display:none;">
+    <div class="row">
+        <div class='col-2'></div>
+        <div class="col-12" style="padding:0 100px">
+            <div class="panel panel--primary">
+                <strong><span id='port_capacity_table_header' class="lead" style="font-size: large;"></p></strong>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="padding:0 100px">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style= "overflow:auto;" id="port_capacity_table_container"display:table>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="inventory_disp_eol" style="display:none;">
+    <div class="row">
+        <div class="col-12" style="padding: 0 100px;">
+            <div class="panel panel--primary">
+                <strong><span id='table_header_inv' class="lead" style="font-size: large;"></strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12" style="padding: 0 100px;">
+            <div class="panel panel--bordered panel--raised panel--loose">
+                <div class="row" style= "overflow:auto;" id="inventory_table_container"display:table></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="disp_data" style="display:none;">
+    <div class="row">
+        <div class="col-12" style="padding: 0 100px;">
+            <div class="panel panel--primary">
+                <strong><span id='table_header' class="lead" style="font-size: large;"></p></strong>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12" style="padding: 0 100px;">
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style= "overflow:auto;" id="table_container"display:table>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id = "overview_content">
+
+    <!--div class="col-2"-->
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-2">
+                    <div class="gauge-container">
+                                                        <div class="gauge gauge--primary gauge--large" data-percentage="100">
+                                                                <div class="gauge__circle">
+                                                                    <div class="mask full">
+                                                                        <div class="fill"></div>
+                                                                    </div>
+                                                                    <div class="mask half">
+                                                                        <div class="fill"></div>
+                                                                        <div class="fill fix"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="gauge__inset">
+                                                                    <!-- use variable here to insert no of domains -->
+                                                                    <div id="num_domain" class="gauge__percentage">0<sup class="text-size-20"></sup></div>
+
+                                                                </div>
+                                                            </div>
+                                                            <!--div class="gauge__label">Domains</div-->
+                                                            <br>
+                                                            <span id='domain' onclick="create_table(this.id, 'Domains')"class="btn btn--primary hover"><strong>Domains</strong></span>
+
+                                                        </div>
+
+                </div>
+            <div class="col-2">
+                    <div class="gauge-container">
+                                                        <div class="gauge gauge--primary gauge--large" data-percentage="100">
+                                                                <div class="gauge__circle">
+                                                                    <div class="mask full">
+                                                                        <div class="fill"></div>
+                                                                    </div>
+                                                                    <div class="mask half">
+                                                                        <div class="fill"></div>
+                                                                        <div class="fill fix"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="gauge__inset">
+                                                                    <!-- use variable here to insert no of domains -->
+                                                                    <div id="num_server" class="gauge__percentage">0<sup class="text-size-20"></sup></div>
+
+                                                                </div>
+                                                            </div>
+                                                            <!--div class="gauge__label">Servers</div-->
+                                                            <br>
+                                                            <span id='B_Server'onclick="create_table(this.id, 'Servers')"class="btn btn--primary hover"><strong>Servers</strong></span>
+
+                                                        
+                                                        </div>
+
+                </div>           
+            <div class="col-2">
+                    <div class="gauge-container">
+                                                        <div class="gauge gauge--primary gauge--large" data-percentage="100">
+                                                                <div class="gauge__circle">
+                                                                    <div class="mask full">
+                                                                        <div class="fill"></div>
+                                                                    </div>
+                                                                    <div class="mask half">
+                                                                        <div class="fill"></div>
+                                                                        <div class="fill fix"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="gauge__inset">
+                                                                    <!-- use variable here to insert no of domains -->
+                                                                    <div id="num_sp" class="gauge__percentage">0<sup class="text-size-20"></sup></div>
+
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <span id = 'Service_profile'onclick="create_table(this.id, 'Service Profiles')"class="btn btn--primary hover"><strong>Service Profiles</strong></span>
+
+                                                        
+                                                        </div>
+
+                </div>
+            <div class="col-2">
+                    
+    <div class="gauge-container">
+                                                        <div class="gauge gauge--primary gauge--large" data-percentage="100">
+                                                                <div class="gauge__circle">
+                                                                    <div class="mask full">
+                                                                        <div class="fill"></div>
+                                                                    </div>
+                                                                    <div class="mask half">
+                                                                        <div class="fill"></div>
+                                                                        <div class="fill fix"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="gauge__inset">
+                                                                    <!-- use variable here to insert no of domains -->
+                                                                    <div id="num_FI" class="gauge__percentage">0<sup class="text-size-20"></sup></div>
+
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <span id='FI'onclick="create_table(this.id, 'Fabric Interconnects')"class="btn btn--primary hover"><strong>Fabric Interconnects</strong></span>
+                                                        
+                                                        </div>
+                </div>
+                <div class="col-2">
+                    
+                    <div class="gauge-container">
+                                                        <div class="gauge gauge--primary gauge--large" data-percentage="100">
+                                                                <div class="gauge__circle">
+                                                                    <div class="mask full">
+                                                                        <div class="fill"></div>
+                                                                    </div>
+                                                                    <div class="mask half">
+                                                                        <div class="fill"></div>
+                                                                        <div class="fill fix"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="gauge__inset">
+                                                                    <!-- use variable here to insert no of domains -->
+                                                                    <div id="num_chassis" class="gauge__percentage">0<sup class="text-size-20"></sup></div>
+
+                                                                </div>
+                                                            </div>
+                                                            <br>
+                                                            <span id='Chassis'onclick="create_table(this.id, 'Chassis')"class="btn btn--primary hover"><strong>Chassis</strong></span>
+                                                        
+                                                        </div>
+                </div>
+                
+                
+        </div>
+
+        <br><br><br><br><br>
+    <div class="row">
+        <div class="col-1"></div>
+
+        <div class="col-3" id="insightSummary" style="flex: 0 1 auto; max-width: 30%;">
+            <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                
+                <strong><span style="font-size: medium;"></p>Insight Summary</strong>
+            </div>
+                <canvas id ="myChart"></canvas>
+        </div>
+        <div class="col-3" style="flex: 0 1 auto; max-width: 30%;">
+            <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                
+                <strong><span style="font-size: medium;"></p>Hardware End of Life</strong>
+            </div>
+                <canvas id ="myChart2"></canvas>
+        </div>
+        <div class="col-3" style="flex: 0 1 auto; max-width: 30%;">
+            <div id="detail_data" style="display:none;">
+                <div class="row">
+                    
+                    <div class="col-12">
+                        <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                            <strong><span id='summ_header' style="font-size: large;"></p></strong>
+                        </div>
+
+                        <div class="panel panel--bordered panel--raised panel--loose">
+                            <div class="row" style= "height:250px; overflow:auto;" id="stats_container"display:table></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br><br><br>
+
+    <div class="row">
+        <div class="col-2"></div>
+        
+        
+        <!-- <div class="col-1"></div> -->
+    </div>
+    <br><br><br>
+
+    <div class="row">
+        <div class="col-2"></div>
+
+        <div class="col-3" style="flex: 0 1 auto; max-width: 40%;">
+            <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                
+                <strong><span style="font-size: medium;"></p>Fault Count</strong>
+            </div>
+                <canvas id ="myChart3"></canvas>
+        </div>
+        <div class="col-3" style="flex: 0 1 auto; max-width: 40%;">
+            <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                
+                <strong><span style="font-size: medium;"></p>Service Profile Association</strong>
+            </div>
+                <canvas id ="myChart4"></canvas>
+        </div>
+    </div>
+
+    <br><br><br>
+
+    <div class="row">
+        <div class="col-2"></div>
+
+        <div class="col-3" style="flex: 0 1 auto; max-width: 40%;">
+            <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                
+                <strong><span style="font-size: medium;"></p>Best Practices</strong>
+            </div>
+                <canvas id ="myChart5"></canvas>
+        </div>
+        <div class="col-3" style="flex: 0 1 auto; max-width: 40%;">
+            <div class="panel panel--warning-alt panel--compressed" style="text-align:center;">
+                
+                <strong><span style="font-size: medium;"></p>Log Analysis</strong>
+            </div>
+                <canvas id ="myChart6"></canvas>
+        </div>
+    </div> 
+
+    <br><br><br>
+    <!--
+    <div class=“row”>
+        <div class="progressbar progressbar--small col-10" data-percentage=“100”>
+        <div class="progressbar__fill"></div>  
+    </div>
+    </div>
+    -->
+    <br><br>
+
+    
+        
+        
+    <div class="row">
+        <div class="col-2"></div>
+            <div class="col-9">
+                <div class="panel panel--warning-alt panel--compressed">
+                    <strong> INSIGHT SUMMARY</strong>
+                </div>
+                <div class="panel panel--bordered panel--raised panel--loose">
+                    <div class="row" style= "overflow:auto;" id="summary_table_container"display:table></div>
+                </div>
+                
+                        
+            </div>
+
+        </div>
+    </div>
+</div>            
+
+
+<div class="col-2"></div>
+<div class="col-12">
+<div class="subheader" style="clear: both; height: 50px;"></div>
+<footer class="footer footer--primary" style="position:fixed;bottom:0;width:100%">
+    <div class="footer__links">
+        <ul class="list list--inline">
+            <li><a href="http://www.cisco.com/cisco/web/siteassets/contacts/index.html" target="_blank">Contacts</a></li>
+            <li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ" target="_blank">Feedback</a></li>
+            <li><a href="https://www.cisco.com/c/en/us/about/help.html" target="_blank">Help</a></li>
+
+        </ul>
+    </div>
+</footer>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+<div id='editpopup'>
+    <div class='close'></div><textarea cols='45' style='resize: vertical; height: 300px;margin-top: 12px;'  class='input-data modal_text'></textarea>
+    <br><br>
+    <div style='float:left;display: none;' class="displayall"></div><br>
+    <input type='button' class='savebtn' value='Save' style="margin-top: 5px !important;"/></div>
+<script src="static/js/bar.js">$('#domain').click();</script>
+
+</body>
+</html>

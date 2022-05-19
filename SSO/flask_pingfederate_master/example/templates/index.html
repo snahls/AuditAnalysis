@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo App for Flask-PingFederate</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<body>
+
+<h1>
+    Demo App for Flask-PingFederate
+    <img src="{{ url_for('static', filename='logo.png') }}" style="margin-bottom: -5px;">
+</h1>
+
+<p>For more info, go to <a href="https://wwwin-gitlab-sjc.cisco.com/kvandecr/flask-pingfederate" target="_blank">Flask-PingFederate's GitLab page</a>.</p>
+
+{% if auth.is_authenticated %}
+    <p>
+        Hello <strong>{{ session['user_info']['sub'] }}</strong>, you are logged in.
+        <!-- AT: {{ auth.access_token }} -->
+        <!-- ID: {{ auth.id_token }} -->
+    </p>
+    <a href="{{ auth.logout_url() }}"><button>Log out</button></a><br>
+{% else %}
+    <p>You are not logged in.</p>
+    <a href="{{ auth.login_url() }}"><button>Log in</button></a><br>
+
+    <p>
+    Don't forget to configure the redirect url in the API portal correctly.
+    It's <strong>{{ url_for('flask-pingfederate.callback', _external=True) }}</strong>
+    </p>
+{% endif %}
+
+<p>
+    This URL will return code 401 if you click it and you're not logged in:
+    <a href="{{ url_for("user_info") }}">See user info</a>
+</p>
+
+<p>
+    This URL will try to log you in if you're not, then redirect you to the page:
+    <a href="{{ url_for("web_secret") }}">See a secret</a>
+</p>
+
+
+</body>
+</html>

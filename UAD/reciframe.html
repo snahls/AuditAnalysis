@@ -1,0 +1,194 @@
+<!--DOCTYPE html-->
+<html>
+<head>
+    
+<style>
+.uk-timeline .uk-timeline-item .uk-card {
+	max-height: 300px;
+}
+
+.uk-timeline .uk-timeline-item {
+    display: flex;
+    position: relative;
+}
+
+.uk-timeline .uk-timeline-item::before {
+    background: #dadee4;
+    content: "";
+    height: 100%;
+    left: 19px;
+    position: absolute;
+    top: 20px;
+    width: 2px;
+		z-index: -1;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-icon .uk-badge {
+		margin-top: 20px;
+    width: 40px;
+    height: 40px;
+}
+
+.uk-timeline .uk-timeline-item .uk-timeline-content {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 0 0 0 3rem;
+}
+
+
+.btn img:hover {
+    box-shadow: 5px 5px 3px #ccc;
+      -moz-box-shadow: 5px 5px 3px #ccc;
+      -webkit-box-shadow: 5px 5px 3px #ccc;
+      -khtml-box-shadow: 5px 5px 3px #ccc;
+}
+.chck{
+    display:none;
+}
+p#copyTarget {
+    font-weight: 450;
+}
+.uk-first-column {
+    font-weight: 600;
+}
+h3.uk-card-title {
+    font-size: 0.9rem;
+    line-height: 0.2;
+}
+div#test1 {
+    padding-top: 5px;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.19/css/uikit-core-rtl.min.css" integrity="sha512-OTQNozgpAKLl76B0d1vH2a48CbYpalAx+8GiYQ3B8FyeKQqXv9ZgNdC+LD5CKOi5taXPd5VtiPqOQAzFDhJBXQ==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.19/js/uikit.min.js" integrity="sha512-vPapOV7xcMVzJ8BlgBp/nwk/2o1t4Ak5m2ecfrN1ahLjIJALpdo8fLNuStqsgw83RZupR/nIagnx291PGslB0g==" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.19/css/uikit-core.min.css" integrity="sha512-uc3hBILUuKXr0T0IoAOrNAKV9hHr5QGZcA11Wda9+Exdz0RMz/ihZSYSs9GzFn7OFXshadYRBut++Uhg7Y3E9w==" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.19/js/uikit-core.min.js" integrity="sha512-E/1SVV6CXxEFh8OUKnVJETrPZ8pK+foN1Yc5rZx4UTgI1Soh9fVofyg/+rEVAYGF5eKY0mgjQDzQtIMsztd+pA==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.6.19/js/uikit-icons.min.js" integrity="sha512-zQkK/xFcaQe8+x9k+vRJjInWbe6GLQ+eHDZNjiIvbuozOIImUL/oApUbwkwMrGnRC4JQeYibka1IXLR2RHD6wQ==" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-3.0.0.min.js"></script>
+
+<script>
+
+function copyToClipboard(text) {
+    if (window.clipboardData && window.clipboardData.setData) {
+        // IE specific code path to prevent textarea being shown while dialog is visible.
+        return clipboardData.setData("Text", text); 
+
+    } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+        } catch (ex) {
+            console.warn("Copy to clipboard failed.", ex);
+            return false;
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+}
+
+function copyfn(id) {
+    var txt=$(id).closest('#myid').find('p').text();
+    var result = copyToClipboard(txt);
+    console.log("copied?", result);
+};
+</script>
+<!-- <link rel="stylesheet" href="css/uikit.min.css" />
+
+<script src="js/uikit.min.js"></script>
+<script src="js/uikit-icons.min.js"></script> -->
+</head>
+<body>
+    <div class="uk-container uk-padding">
+        <div class="uk-timeline">
+            {%for i in recommendation_data%}
+  
+                <div class="uk-timeline-item">
+                    <div class="uk-timeline-icon">
+                        <span class="uk-badge"><span uk-icon="comment"></span></span>
+                    </div>
+                    <div class="uk-timeline-content">
+                        <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto" id='myid'>
+                            <div class="uk-card-header" id='test'>
+                                <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                    <div>
+                                        Customer Name : {{i['Cust_name']}}<br>Customer PID : {{i['pid']}}
+                                    </div>
+                                        
+                                        {% if i['Severity'] in ['low','Low'] %}
+                                            <span class="uk-label uk-label-success uk-margin-auto-left">{{i['Severity']}}</span>
+                                        {% elif i['Severity'] =='High' %}
+                                            <span class="uk-label uk-label-danger uk-margin-auto-left">{{i['Severity']}}</span>
+                                        {% elif i['Severity'] =='Info-only' %}
+                                            <span class="uk-label uk-label-warning uk-margin-auto-left">{{i['Severity']}}</span>
+                                        {% elif i['Severity'] =='Medium' %}
+                                            <span class="uk-label uk-margin-auto-left">{{i['Severity']}}</span>
+                                        {% endif %}                     
+                                        <div class="btn"></label><img src="static/img/copy-24.png" id="copyButton" onclick='copyfn(this)' ></div>
+                                        <div>
+                
+                                            <h3 class="uk-card-title"><br>{{i['Code']}}{{i['Heading']}}</h3>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="uk-card-body" id='test1'>
+                                                    <p id="copyTarget" class="uk-text-success">{{i['Recommendation']}}{{i['Audit Recommendation']}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {%endfor%}
+            
+            <!-- <div class="uk-timeline-item">
+                <div class="uk-timeline-icon">
+                    <span class="uk-badge"><span uk-icon="check"></span></span>
+                </div>
+                <div class="uk-timeline-content">
+                    <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
+                        <div class="uk-card-header">
+                            <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                <h3 class="uk-card-title"><time datetime="2020-07-07">July 7</time></h3>
+                                <span class="uk-label uk-label-warning uk-margin-auto-left">Test</span>
+                            </div>
+                        </div>
+                        <div class="uk-card-body">
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                            </p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                            </p>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+                    <!-- <div class="uk-timeline-item">
+                <div class="uk-timeline-icon">
+                    <span class="uk-badge"><span uk-icon="check"></span></span>
+                </div>
+                <div class="uk-timeline-content">
+                    <div class="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
+                        <div class="uk-card-header">
+                            <div class="uk-grid-small uk-flex-middle" uk-grid>
+                                <h3 class="uk-card-title"><time datetime="2020-07-06">July 6</time></h3>
+                                <span class="uk-label uk-label-danger uk-margin-auto-left">Fix</span>
+                            </div>
+                        </div>
+                        <div class="uk-card-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
+                            </p>
+                        </div>
+                    </div>
+                                    <a href="#"><span class="uk-margin-small-right" uk-icon="triangle-down"></span>Load more</a>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</body>
+</html>
